@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  UseInterceptors,
+  ClassSerializerInterceptor,
   Param,
   Post,
   Put,
@@ -11,13 +13,17 @@ import { CompanyService } from "./service";
 import { Company } from "src/entities/types/compani.entity";
 import { CreateCompanyDto, UpdateCompanyDto } from "./dto/dto";
 
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+
 @Controller("company")
+@ApiBearerAuth()
+@ApiTags("Company")
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
-
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  async create(@Body() createCompanyDto: CreateCompanyDto) {
-    return this.companyService.create(createCompanyDto);
+  async create(@Body() createCompany: CreateCompanyDto) {
+    return this.companyService.create(createCompany);
   }
 
   @Get()
@@ -33,9 +39,9 @@ export class CompanyController {
   @Put(":id")
   async update(
     @Param("id") id: string,
-    @Body() updateCompanyDto: UpdateCompanyDto,
+    @Body() updateCompany: UpdateCompanyDto,
   ) {
-    return this.companyService.update(id, updateCompanyDto);
+    return this.companyService.update(id, updateCompany);
   }
 
   @Delete(":id")

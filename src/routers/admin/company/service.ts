@@ -12,6 +12,10 @@ export class CompanyService {
   ) {}
 
   async create(createCompanyDto: any): Promise<Company> {
+    console.log(
+      "🚀 ~ file: service.ts:15 ~ CompanyService ~ create ~ createCompanyDto:",
+      createCompanyDto,
+    );
     const newCompany = new this.companyModel(createCompanyDto);
     return newCompany.save();
   }

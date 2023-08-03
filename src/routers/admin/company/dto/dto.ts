@@ -1,51 +1,53 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { IsPhoneNumber, IsEmail, IsNotEmpty } from "class-validator";
+import { ApiProperty, ApiOperation } from "@nestjs/swagger";
 
-@Schema()
-export class CreateCompanyDto extends Document {
-  @Prop({ required: true, type: String })
+export interface CreateCompanySchema {
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+}
+export class CreateCompanyDto {
+  @ApiProperty()
+  @IsNotEmpty()
   name: string;
 
-  @Prop({ required: true, type: String })
+  @ApiProperty()
+  @IsNotEmpty()
   address: string;
 
-  @Prop({
-    required: true,
-    type: String,
-    match: /^\+\d{1,3}-\d{3}-\d{3}-\d{4}$/,
-  })
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsPhoneNumber()
   phone: string;
 
-  @Prop({
-    required: true,
-    type: String,
-    unique: true,
-    match: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-  })
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEmail()
   email: string;
 }
 
-export const CreateCompanySchema =
-  SchemaFactory.createForClass(CreateCompanyDto);
-
-@Schema()
-export class UpdateCompanyDto extends Document {
-  @Prop({ type: String })
+export interface UpdateCompanySchema {
   name?: string;
-
-  @Prop({ type: String })
   address?: string;
-
-  @Prop({ type: String, match: /^\+\d{1,3}-\d{3}-\d{3}-\d{4}$/ })
   phone?: string;
-
-  @Prop({
-    type: String,
-    unique: true,
-    match: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-  })
   email?: string;
 }
 
-export const UpdateCompanySchema =
-  SchemaFactory.createForClass(UpdateCompanyDto);
+export class UpdateCompanyDto {
+  @ApiProperty({ required: true })
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty({ required: true })
+  @IsNotEmpty()
+  address: string;
+
+  @ApiProperty({ required: true })
+  @IsNotEmpty()
+  phone: string;
+
+  @ApiProperty({ required: true })
+  @IsNotEmpty()
+  email: string;
+}
