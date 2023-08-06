@@ -3,13 +3,14 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
-import { IResponse } from 'src/interface';
+  InternalServerErrorException,
+} from "@nestjs/common";
+import { Request, Response } from "express";
+import { IResponse } from "src/interface";
 
-@Catch(HttpException)
+@Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
+  catch(exception: InternalServerErrorException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -25,6 +26,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       };
 
       responsePayload = {
+        status: false,
         timestamp: new Date().toISOString(),
         path: request.url,
         success: false,
@@ -34,13 +36,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
     } else {
       status = 500;
       responsePayload = {
+        status: false,
         timestamp: new Date().toISOString(),
         path: request.url,
         success: false,
-        message: 'Internal server error',
+        message: "Internal server error",
         code: 500,
       };
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === "development") {
         throw exception;
       }
     }

@@ -7,6 +7,7 @@ import {
   ClassSerializerInterceptor,
   Param,
   Post,
+  BadRequestException,
   Put,
 } from "@nestjs/common";
 import { CompanyService } from "./service";
@@ -20,10 +21,17 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 @ApiTags("Company")
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
-  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   async create(@Body() createCompany: CreateCompanyDto) {
-    return this.companyService.create(createCompany);
+    try {
+      return this.companyService.create(createCompany);
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: service.ts:19 ~ CompanyService ~ create ~ error:",
+        error,
+      );
+      throw new BadRequestException("error");
+    }
   }
 
   @Get()

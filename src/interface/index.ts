@@ -1,4 +1,5 @@
 export interface IResponse {
+  status: boolean;
   timestamp: string;
   path: string;
   success: boolean;

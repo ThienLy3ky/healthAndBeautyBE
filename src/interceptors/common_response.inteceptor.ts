@@ -1,6 +1,11 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from "@nestjs/common";
+import { Observable, throwError } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 // import { CryptoService } from 'src/shared/crypto/crypto.service';
 
 @Injectable()
@@ -24,6 +29,14 @@ export class CommonResInterceptor implements NestInterceptor {
           data: payload,
         };
         // }
+      }),
+      catchError((err) => {
+        console.log(err);
+        const res = {
+          success: false,
+          data: err,
+        };
+        return throwError(() => res);
       }),
     );
   }

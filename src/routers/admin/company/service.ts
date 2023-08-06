@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Company } from "src/entities/types/companies.entity";
@@ -12,10 +12,6 @@ export class CompanyService {
   ) {}
 
   async create(createCompanyDto: any): Promise<Company> {
-    console.log(
-      "🚀 ~ file: service.ts:15 ~ CompanyService ~ create ~ createCompanyDto:",
-      createCompanyDto,
-    );
     const newCompany = new this.companyModel(createCompanyDto);
     return newCompany.save();
   }
