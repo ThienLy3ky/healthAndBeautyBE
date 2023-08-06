@@ -1,8 +1,8 @@
-import { IsEmail, IsNotEmpty } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
+import { IsPhoneNumber, IsEmail, IsNotEmpty } from "class-validator";
+import { ApiProperty, ApiOperation } from "@nestjs/swagger";
 import { Pagination } from "src/interface/dto";
 
-export interface CreateBannerSchema {
+export interface CreateProductTypeSchema {
   name: string;
   image: string;
   code: string;
@@ -12,7 +12,7 @@ export class GetAll extends Pagination {
   @IsNotEmpty()
   key: string;
 }
-export class CreateBannerDto {
+export class CreateProductTypeDto {
   @ApiProperty()
   @IsNotEmpty()
   name: string;
@@ -26,7 +26,7 @@ export class CreateBannerDto {
   code: string;
 }
 
-export class UpdateBannerDto {
+export class UpdateProductTypeDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   name: string;

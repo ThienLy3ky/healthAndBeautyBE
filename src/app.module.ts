@@ -26,6 +26,7 @@ import { DrugProductModule } from "./routers/admin/product/module";
 import { SettingModule } from "./routers/admin/setting/module";
 import { ProductSizeModule } from "./routers/admin/sizeProduct/module";
 import { SpeciesProductModule } from "./routers/admin/species/module";
+import { UploadModule } from "./routers/upload/module";
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { SpeciesProductModule } from "./routers/admin/species/module";
     SettingModule,
     ProductSizeModule,
     SpeciesProductModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [

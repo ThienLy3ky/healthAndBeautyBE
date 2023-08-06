@@ -2,7 +2,6 @@ import { Controller, Get } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 @Controller()
-@ApiTags("Price Vehicle Type Bonus")
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
