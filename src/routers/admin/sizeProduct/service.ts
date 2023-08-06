@@ -1,37 +1,37 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { ProductType } from "src/entities/types/type.entity";
+import { ProductSize } from "src/entities/types/size.entity";
 import { GetAll } from "./dto/dto";
 import { ByID } from "src/interface/dto";
 
 @Injectable()
-export class ProductTypeService {
+export class ProductSizeService {
   constructor(
-    @InjectModel(ProductType.name)
-    private readonly productTypeModel: Model<ProductType>,
+    @InjectModel(ProductSize.name)
+    private readonly productTypeModel: Model<ProductSize>,
   ) {}
 
-  async create(createProductTypeDto: any): Promise<ProductType> {
-    const newProductType = new this.productTypeModel(createProductTypeDto);
-    return newProductType.save();
+  async create(createProductSizeDto: any): Promise<ProductSize> {
+    const newProductSize = new this.productTypeModel(createProductSizeDto);
+    return newProductSize.save();
   }
 
-  async findAll(query: GetAll): Promise<ProductType[]> {
+  async findAll(query: GetAll): Promise<ProductSize[]> {
     return this.productTypeModel.find().lean().exec();
   }
 
-  async findOne({ id }: ByID): Promise<ProductType> {
+  async findOne({ id }: ByID): Promise<ProductSize> {
     return this.productTypeModel.findById(id).lean().exec();
   }
 
-  async update({ id }: ByID, updateProductTypeDto: any): Promise<ProductType> {
-    return this.productTypeModel.findByIdAndUpdate(id, updateProductTypeDto, {
+  async update({ id }: ByID, updateProductSizeDto: any): Promise<ProductSize> {
+    return this.productTypeModel.findByIdAndUpdate(id, updateProductSizeDto, {
       new: true,
     });
   }
 
-  async remove({ id }: ByID): Promise<ProductType> {
+  async remove({ id }: ByID): Promise<ProductSize> {
     return this.productTypeModel.findByIdAndDelete(id);
   }
 }

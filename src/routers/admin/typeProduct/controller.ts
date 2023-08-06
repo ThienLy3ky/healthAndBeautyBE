@@ -17,7 +17,7 @@ import { ByID } from "src/interface/dto";
 
 @Controller("type-product")
 @ApiBearerAuth()
-@ApiTags("Type")
+@ApiTags("Type Product")
 export class ProductTypeController {
   constructor(private readonly companyService: ProductTypeService) {}
   @Post()

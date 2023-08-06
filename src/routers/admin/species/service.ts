@@ -1,37 +1,46 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { ProductType } from "src/entities/types/type.entity";
+import { SpeciesProduct } from "src/entities/types/species.entity";
 import { GetAll } from "./dto/dto";
 import { ByID } from "src/interface/dto";
 
 @Injectable()
-export class ProductTypeService {
+export class SpeciesProductService {
   constructor(
-    @InjectModel(ProductType.name)
-    private readonly productTypeModel: Model<ProductType>,
+    @InjectModel(SpeciesProduct.name)
+    private readonly productTypeModel: Model<SpeciesProduct>,
   ) {}
 
-  async create(createProductTypeDto: any): Promise<ProductType> {
-    const newProductType = new this.productTypeModel(createProductTypeDto);
-    return newProductType.save();
+  async create(createSpeciesProductDto: any): Promise<SpeciesProduct> {
+    const newSpeciesProduct = new this.productTypeModel(
+      createSpeciesProductDto,
+    );
+    return newSpeciesProduct.save();
   }
 
-  async findAll(query: GetAll): Promise<ProductType[]> {
+  async findAll(query: GetAll): Promise<SpeciesProduct[]> {
     return this.productTypeModel.find().lean().exec();
   }
 
-  async findOne({ id }: ByID): Promise<ProductType> {
+  async findOne({ id }: ByID): Promise<SpeciesProduct> {
     return this.productTypeModel.findById(id).lean().exec();
   }
 
-  async update({ id }: ByID, updateProductTypeDto: any): Promise<ProductType> {
-    return this.productTypeModel.findByIdAndUpdate(id, updateProductTypeDto, {
-      new: true,
-    });
+  async update(
+    { id }: ByID,
+    updateSpeciesProductDto: any,
+  ): Promise<SpeciesProduct> {
+    return this.productTypeModel.findByIdAndUpdate(
+      id,
+      updateSpeciesProductDto,
+      {
+        new: true,
+      },
+    );
   }
 
-  async remove({ id }: ByID): Promise<ProductType> {
+  async remove({ id }: ByID): Promise<SpeciesProduct> {
     return this.productTypeModel.findByIdAndDelete(id);
   }
 }

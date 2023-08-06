@@ -8,39 +8,43 @@ import {
   Query,
   Put,
 } from "@nestjs/common";
-import { ProductTypeService } from "./service";
-import { ProductType } from "src/entities/types/type.entity";
-import { CreateProductTypeDto, GetAll, UpdateProductTypeDto } from "./dto/dto";
+import { SpeciesProductService } from "./service";
+import { SpeciesProduct } from "src/entities/types/species.entity";
+import {
+  CreateSpeciesProductDto,
+  GetAll,
+  UpdateSpeciesProductDto,
+} from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ByID } from "src/interface/dto";
 
-@Controller("type-product")
+@Controller("species-product")
 @ApiBearerAuth()
-@ApiTags("Type")
-export class ProductTypeController {
-  constructor(private readonly companyService: ProductTypeService) {}
+@ApiTags("Speccies")
+export class SpeciesProductController {
+  constructor(private readonly companyService: SpeciesProductService) {}
   @Post()
-  async create(@Body() createProductType: CreateProductTypeDto) {
-    return this.companyService.create(createProductType);
+  async create(@Body() createSpeciesProduct: CreateSpeciesProductDto) {
+    return this.companyService.create(createSpeciesProduct);
   }
 
   @Get()
-  async findAll(@Query() query: GetAll): Promise<ProductType[]> {
+  async findAll(@Query() query: GetAll): Promise<SpeciesProduct[]> {
     return this.companyService.findAll(query);
   }
 
   @Get(":id")
-  async findOne(@Param("id") { id }: ByID): Promise<ProductType> {
+  async findOne(@Param("id") { id }: ByID): Promise<SpeciesProduct> {
     return this.companyService.findOne({ id });
   }
 
   @Put(":id")
   async update(
     @Param("id") { id }: ByID,
-    @Body() updateProductType: UpdateProductTypeDto,
+    @Body() updateSpeciesProduct: UpdateSpeciesProductDto,
   ) {
-    return this.companyService.update({ id }, updateProductType);
+    return this.companyService.update({ id }, updateSpeciesProduct);
   }
 
   @Delete(":id")

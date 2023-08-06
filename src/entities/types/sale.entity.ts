@@ -3,8 +3,8 @@ import Mongoose, { Document } from "mongoose";
 import { Admin } from "./admin.entity";
 import { DrugProduct } from "./product.entity";
 
-@Schema({ collection: "carts", timestamps: true })
-export class Cart extends Document {
+@Schema({ collection: "sales", timestamps: true })
+export class Sale extends Document {
   @Prop({
     type: Mongoose.Schema.ObjectId,
     ref: "products",
@@ -32,4 +32,4 @@ export class Cart extends Document {
   isdeleted: Admin;
 }
 
-export const CartSchema = SchemaFactory.createForClass(Cart);
+export const SaleSchema = SchemaFactory.createForClass(Sale);

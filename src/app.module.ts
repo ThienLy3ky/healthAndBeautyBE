@@ -16,6 +16,16 @@ import { AllExceptionsFilter } from "./filters/all-exceptions.filter";
 import { RawBodyMiddleware } from "./middleware/raw-body.middleware";
 import { LoggerMiddleware } from "./middleware/logger.middleware";
 import { ProductTypeModule } from "./routers/admin/typeProduct/module";
+import { BannerModule } from "./routers/admin/banner/module";
+import { BillModule } from "./routers/admin/bill/module";
+import { CategoryModule } from "./routers/admin/catergory/module";
+import { CodeSaleModule } from "./routers/admin/codeSale/module";
+import { SaleModule } from "./routers/admin/sale/module";
+import { GroupProductModule } from "./routers/admin/groupProduct/module";
+import { DrugProductModule } from "./routers/admin/product/module";
+import { SettingModule } from "./routers/admin/setting/module";
+import { ProductSizeModule } from "./routers/admin/sizeProduct/module";
+import { SpeciesProductModule } from "./routers/admin/species/module";
 
 @Module({
   imports: [
@@ -26,6 +36,17 @@ import { ProductTypeModule } from "./routers/admin/typeProduct/module";
     }),
     CompanyModule,
     ProductTypeModule,
+    BannerModule,
+    BillModule,
+    CategoryModule,
+    CodeSaleModule,
+    CompanyModule,
+    GroupProductModule,
+    DrugProductModule,
+    SaleModule,
+    SettingModule,
+    ProductSizeModule,
+    SpeciesProductModule,
   ],
   controllers: [AppController],
   providers: [

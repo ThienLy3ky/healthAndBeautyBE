@@ -1,13 +1,13 @@
 import { IsPhoneNumber, IsEmail, IsNotEmpty } from "class-validator";
 import { ApiProperty, ApiOperation } from "@nestjs/swagger";
 
-export interface CreateCompanySchema {
+export interface CreateSettingSchema {
   name: string;
   address: string;
   phone: string;
   email: string;
 }
-export class CreateCompanyDto {
+export class CreateSettingDto {
   @ApiProperty()
   @IsNotEmpty()
   name: string;
@@ -27,14 +27,14 @@ export class CreateCompanyDto {
   email: string;
 }
 
-export interface UpdateCompanySchema {
+export interface UpdateSettingSchema {
   name?: string;
   address?: string;
   phone?: string;
   email?: string;
 }
 
-export class UpdateCompanyDto {
+export class UpdateSettingDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   name: string;

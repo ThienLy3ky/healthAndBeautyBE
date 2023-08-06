@@ -9,39 +9,39 @@ import {
   Post,
   Put,
 } from "@nestjs/common";
-import { CompanyService } from "./service";
-import { Company } from "src/entities/types/companies.entity";
-import { CreateCompanyDto, UpdateCompanyDto } from "./dto/dto";
+import { SettingService } from "./service";
+import { Setting } from "src/entities/types/setting.entity";
+import { CreateSettingDto, UpdateSettingDto } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
-@Controller("company")
+@Controller("setting")
 @ApiBearerAuth()
-@ApiTags("Company")
-export class CompanyController {
-  constructor(private readonly companyService: CompanyService) {}
+@ApiTags("Setting")
+export class SettingController {
+  constructor(private readonly companyService: SettingService) {}
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  async create(@Body() createCompany: CreateCompanyDto) {
-    return this.companyService.create(createCompany);
+  async create(@Body() createSetting: CreateSettingDto) {
+    return this.companyService.create(createSetting);
   }
 
   @Get()
-  async findAll(): Promise<Company[]> {
+  async findAll(): Promise<Setting[]> {
     return this.companyService.findAll();
   }
 
   @Get(":id")
-  async findOne(@Param("id") id: string): Promise<Company> {
+  async findOne(@Param("id") id: string): Promise<Setting> {
     return this.companyService.findOne(id);
   }
 
   @Put(":id")
   async update(
     @Param("id") id: string,
-    @Body() updateCompany: UpdateCompanyDto,
+    @Body() updateSetting: UpdateSettingDto,
   ) {
-    return this.companyService.update(id, updateCompany);
+    return this.companyService.update(id, updateSetting);
   }
 
   @Delete(":id")

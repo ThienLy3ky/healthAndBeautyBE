@@ -3,8 +3,8 @@ import Mongoose, { Document } from "mongoose";
 import { Admin } from "./admin.entity";
 import { DrugProduct } from "./product.entity";
 
-@Schema({ collection: "type", timestamps: true })
-export class ProductType extends Document {
+@Schema({ collection: "sale-code", timestamps: true })
+export class CodeSale extends Document {
   @Prop({
     type: String,
     required: true, // name is required
@@ -53,4 +53,4 @@ export class ProductType extends Document {
   isdeleted: Admin;
 }
 
-export const ProductTypeSchema = SchemaFactory.createForClass(ProductType);
+export const CodeSaleSchema = SchemaFactory.createForClass(CodeSale);

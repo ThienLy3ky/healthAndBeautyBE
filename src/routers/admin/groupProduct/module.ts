@@ -1,16 +1,19 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { ProductType, ProductTypeSchema } from "src/entities/types/type.entity";
-import { ProductTypeController } from "./controller";
-import { ProductTypeService } from "./service";
+import {
+  GroupProduct,
+  GroupProductSchema,
+} from "src/entities/types/group.entity";
+import { GroupProductController } from "./controller";
+import { GroupProductService } from "./service";
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: ProductType.name, schema: ProductTypeSchema },
+      { name: GroupProduct.name, schema: GroupProductSchema },
     ]),
   ],
-  controllers: [ProductTypeController],
-  providers: [ProductTypeService],
+  controllers: [GroupProductController],
+  providers: [GroupProductService],
 })
-export class ProductTypeModule {}
+export class GroupProductModule {}
