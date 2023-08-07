@@ -11,6 +11,10 @@ import { IResponse } from "src/interface";
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: InternalServerErrorException, host: ArgumentsHost) {
+    console.log(
+      "🚀 ~ file: all-exceptions.filter.ts:14 ~ AllExceptionsFilter ~ exception:",
+      exception,
+    );
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -40,7 +44,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         timestamp: new Date().toISOString(),
         path: request.url,
         success: false,
-        message: "Internal server error",
+        message: exception || "Internal server error",
         code: 500,
       };
       if (process.env.NODE_ENV === "development") {

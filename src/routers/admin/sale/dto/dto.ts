@@ -9,7 +9,6 @@ export interface CreateSaleSchema {
 }
 export class GetAll extends Pagination {
   @ApiProperty()
-  @IsNotEmpty()
   key: string;
 }
 export class CreateSaleDto {

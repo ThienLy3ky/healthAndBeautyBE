@@ -18,8 +18,7 @@ export class CreateProductSizeDto {
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  image: string;
+  description: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -32,8 +31,7 @@ export class UpdateProductSizeDto {
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  image: string;
+  description: string;
 
   @ApiProperty()
   @IsNotEmpty()

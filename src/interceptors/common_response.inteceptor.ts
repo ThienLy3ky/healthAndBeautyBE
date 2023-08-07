@@ -30,14 +30,6 @@ export class CommonResInterceptor implements NestInterceptor {
         };
         // }
       }),
-      catchError((err) => {
-        console.log(err);
-        const res = {
-          success: false,
-          data: err,
-        };
-        return throwError(() => res);
-      }),
     );
   }
 }

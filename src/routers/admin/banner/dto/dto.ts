@@ -9,7 +9,6 @@ export interface CreateBannerSchema {
 }
 export class GetAll extends Pagination {
   @ApiProperty()
-  @IsNotEmpty()
   key: string;
 }
 export class CreateBannerDto {

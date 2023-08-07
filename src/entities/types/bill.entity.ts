@@ -33,7 +33,7 @@ export class Bill extends Document {
   @Prop({ type: String, required: true })
   code: string;
 
-  @Prop({ type: TypeBill })
+  @Prop({ type: Number, enum: TypeBill })
   type: TypeBill;
 
   @Prop({ type: String, unique: true })

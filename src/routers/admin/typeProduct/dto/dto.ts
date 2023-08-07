@@ -8,8 +8,7 @@ export interface CreateProductTypeSchema {
   code: string;
 }
 export class GetAll extends Pagination {
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiProperty({ required: false })
   key: string;
 }
 export class CreateProductTypeDto {

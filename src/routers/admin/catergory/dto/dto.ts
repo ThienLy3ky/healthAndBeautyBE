@@ -6,10 +6,10 @@ export interface CreateCategorySchema {
   name: string;
   image: string;
   code: string;
+  description: string;
 }
 export class GetAll extends Pagination {
   @ApiProperty()
-  @IsNotEmpty()
   key: string;
 }
 export class CreateCategoryDto {
@@ -18,24 +18,28 @@ export class CreateCategoryDto {
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   image: string;
 
   @ApiProperty()
   @IsNotEmpty()
   code: string;
+
+  @ApiProperty()
+  description: string;
 }
 
 export class UpdateCategoryDto {
-  @ApiProperty({ required: true })
+  @ApiProperty()
   @IsNotEmpty()
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   image: string;
 
   @ApiProperty()
   @IsNotEmpty()
   code: string;
+
+  @ApiProperty()
+  description: string;
 }

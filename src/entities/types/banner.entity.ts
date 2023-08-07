@@ -12,7 +12,8 @@ export class Banner extends Document {
   product: DrugProduct;
 
   @Prop({
-    type: BannnerType,
+    type: Number,
+    enum: BannnerType,
     required: true,
   })
   type: BannnerType;

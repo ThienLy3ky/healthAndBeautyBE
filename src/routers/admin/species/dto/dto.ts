@@ -18,12 +18,14 @@ export class CreateSpeciesProductDto {
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   image: string;
 
   @ApiProperty()
   @IsNotEmpty()
   code: string;
+
+  @ApiProperty()
+  description: string;
 }
 
 export class UpdateSpeciesProductDto {
@@ -32,10 +34,12 @@ export class UpdateSpeciesProductDto {
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   image: string;
 
   @ApiProperty()
   @IsNotEmpty()
   code: string;
+
+  @ApiProperty()
+  description: string;
 }

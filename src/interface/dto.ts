@@ -1,21 +1,22 @@
 import { IsNotEmpty, IsNumber, IsMongoId } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { ObjectId } from "mongoose";
+import { Schema } from "mongoose";
 
 export class Pagination {
-  @ApiProperty()
+  @ApiProperty({ default: 10, minimum: 1 })
   @IsNotEmpty()
-  @IsNumber()
-  limt: number;
+  limit: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: 1, minimum: 1 })
   @IsNotEmpty()
-  @IsNumber()
-  page: string;
+  page: number;
 }
 export class ByID {
-  @ApiProperty()
+  @ApiProperty({
+    default: "64cd0e5c7e912e8e295b687d",
+    type: Schema.Types.ObjectId,
+  })
   @IsNotEmpty()
   @IsMongoId()
-  id: ObjectId;
+  id: Schema.Types.ObjectId;
 }

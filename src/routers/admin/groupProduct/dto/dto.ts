@@ -9,7 +9,6 @@ export interface CreateGroupProductSchema {
 }
 export class GetAll extends Pagination {
   @ApiProperty()
-  @IsNotEmpty()
   key: string;
 }
 export class CreateGroupProductDto {
@@ -24,6 +23,9 @@ export class CreateGroupProductDto {
   @ApiProperty()
   @IsNotEmpty()
   code: string;
+
+  @ApiProperty()
+  description: string;
 }
 
 export class UpdateGroupProductDto {
@@ -38,4 +40,7 @@ export class UpdateGroupProductDto {
   @ApiProperty()
   @IsNotEmpty()
   code: string;
+
+  @ApiProperty()
+  description: string;
 }

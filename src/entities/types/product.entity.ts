@@ -6,9 +6,9 @@ import { SpeciesProduct } from "./species.entity";
 import { GroupProduct } from "./group.entity";
 import { ProductType } from "./type.entity";
 import { Company } from "./companies.entity";
+import { Category } from "./categories.entity";
 
 export type DrugProductDocument = DrugProduct & Document;
-@Schema({ collection: "product", timestamps: true })
 class Price {
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "sizes" })
   size: ProductSize;
@@ -19,17 +19,21 @@ class Price {
   @Prop({ type: Number, required: true, min: 0 })
   priceNew: number;
 
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "groups" })
+  group: GroupProduct;
+
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "species" })
   species?: SpeciesProduct;
 }
-@Schema()
+
+@Schema({ collection: "product", timestamps: true })
 export class DrugProduct {
   @Prop({ type: String, required: true, unique: true })
   name: string;
 
   @Prop({
     type: String, // image is required
-    match: /^https?:\/\/.+/, // image must be a valid URL
+    // match: /^https?:\/\/.+/, // image must be a valid URL
   })
   image: string[];
 
@@ -54,12 +58,11 @@ export class DrugProduct {
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "types" })
   type: ProductType;
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "groups" })
-  group: GroupProduct;
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "categories" })
+  categories: Category;
 
   @Prop({
     type: Date,
-    required: true,
     validate: {
       validator: isFutureDate,
       message: "Expiration date must be in the future",
@@ -68,7 +71,6 @@ export class DrugProduct {
   expirationDate: Date;
   @Prop({
     type: Date,
-    required: true,
     validate: {
       validator: isFutureDate,
       message: "Expiration date must be in the future",

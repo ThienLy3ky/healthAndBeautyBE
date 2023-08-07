@@ -9,7 +9,6 @@ export interface CreateBillSchema {
 }
 export class GetAll extends Pagination {
   @ApiProperty()
-  @IsNotEmpty()
   key: string;
 }
 export class CreateBillDto {
