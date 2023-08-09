@@ -24,18 +24,18 @@ class Price {
 
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "species" })
   species?: SpeciesProduct;
+
+  @Prop({
+    type: String, // image is required
+    // match: /^https?:\/\/.+/, // image must be a valid URL
+  })
+  image: string;
 }
 
 @Schema({ collection: "product", timestamps: true })
 export class DrugProduct {
   @Prop({ type: String, required: true, unique: true })
   name: string;
-
-  @Prop({
-    type: String, // image is required
-    // match: /^https?:\/\/.+/, // image must be a valid URL
-  })
-  image: string[];
 
   @Prop({ type: String })
   description?: string;

@@ -18,6 +18,10 @@ class CreateDrugProductSchema {
 
   @ApiProperty({ type: Schema.Types.ObjectId })
   group: Schema.Types.ObjectId;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  image: string;
 }
 export class GetAll extends Pagination {
   @ApiProperty()
@@ -27,10 +31,6 @@ export class CreateDrugProductDto {
   @ApiProperty()
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  image: string;
 
   @ApiProperty()
   description: string;
@@ -61,10 +61,6 @@ export class UpdateDrugProductDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  image: string;
 
   @ApiProperty()
   description: string;
