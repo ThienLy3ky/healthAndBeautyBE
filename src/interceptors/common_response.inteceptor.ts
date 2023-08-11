@@ -4,15 +4,15 @@ import {
   ExecutionContext,
   CallHandler,
 } from "@nestjs/common";
-import { Observable, throwError } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 // import { CryptoService } from 'src/shared/crypto/crypto.service';
 
 @Injectable()
 export class CommonResInterceptor implements NestInterceptor {
   // constructor(private readonly cryptoService: CryptoService) {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const req = context.switchToHttp().getRequest();
+    // const req = context.switchToHttp().getRequest();
     // const isEnableEncrypt = req.isEnableEncrypt;
 
     return next.handle().pipe(
@@ -24,10 +24,7 @@ export class CommonResInterceptor implements NestInterceptor {
         //   });
         // }
         // if (!isEnableEncrypt) {
-        return {
-          success: true,
-          data: payload,
-        };
+        return payload;
         // }
       }),
     );

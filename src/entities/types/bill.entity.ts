@@ -4,11 +4,30 @@ import { Account } from "./user.entity";
 import { Admin } from "./admin.entity";
 import { DrugProduct } from "./product.entity";
 import { TypeBill } from "../enum/billType.enum";
-
+import { ProductSize } from "./size.entity";
+import { SpeciesProduct } from "./species.entity";
+import { GroupProduct } from "./group.entity";
 class product {
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "products" })
   product: DrugProduct;
 
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "sizes" })
+  size: ProductSize;
+
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "groups" })
+  group: GroupProduct;
+
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "species" })
+  taste?: SpeciesProduct;
+
+  @Prop({ type: Number, required: true, min: 0 })
+  quantity: number;
+
+  @Prop({
+    type: String, // image is required
+    // match: /^https?:\/\/.+/, // image must be a valid URL
+  })
+  image: string;
   @Prop({
     type: Number,
     required: true,
@@ -36,11 +55,11 @@ export class Bill extends Document {
   @Prop({ type: Number, enum: TypeBill })
   type: TypeBill;
 
-  @Prop({ type: String, unique: true })
-  address: string;
+  @Prop({ type: product })
+  Product: product[];
 
   @Prop({ type: String, unique: true })
-  image: string;
+  address: string;
 
   @Prop({
     type: Mongoose.Schema.ObjectId,

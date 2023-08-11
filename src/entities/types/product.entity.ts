@@ -25,6 +25,9 @@ class Price {
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "species" })
   species?: SpeciesProduct;
 
+  @Prop({ type: Number, required: true, min: 0 })
+  quantity: number;
+
   @Prop({
     type: String, // image is required
     // match: /^https?:\/\/.+/, // image must be a valid URL
@@ -48,9 +51,6 @@ export class DrugProduct {
 
   @Prop({ type: Price, min: 0 })
   price: Price[];
-
-  @Prop({ type: Number, required: true, min: 0 })
-  quantity: number;
 
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "companies" })
   company: Company;
