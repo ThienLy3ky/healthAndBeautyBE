@@ -2,7 +2,7 @@ import { IsPhoneNumber, IsEmail, IsNotEmpty } from "class-validator";
 import { ApiProperty, ApiOperation } from "@nestjs/swagger";
 import { Pagination } from "src/interface/dto";
 
-export interface CreateSpeciesProductSchema {
+export interface CreateStyleProductSchema {
   name: string;
   image: string;
   code: string;
@@ -12,13 +12,13 @@ export class GetAll extends Pagination {
   @IsNotEmpty()
   key: string;
 }
-export class CreateSpeciesProductDto {
+export class CreateStyleProductDto {
   @ApiProperty()
   @IsNotEmpty()
   name: string;
 
   @ApiProperty()
-  image: string;
+  image?: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -28,13 +28,13 @@ export class CreateSpeciesProductDto {
   description: string;
 }
 
-export class UpdateSpeciesProductDto {
+export class UpdateStyleProductDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   name: string;
 
   @ApiProperty()
-  image: string;
+  image?: string;
 
   @ApiProperty()
   @IsNotEmpty()

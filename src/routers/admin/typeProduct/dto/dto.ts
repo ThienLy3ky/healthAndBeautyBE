@@ -9,7 +9,13 @@ export interface CreateProductTypeSchema {
 }
 export class GetAll extends Pagination {
   @ApiProperty({ required: false })
-  key: string;
+  key?: string;
+
+  @ApiProperty({ required: false })
+  order?: "asc" | "desc";
+
+  @ApiProperty({ required: false })
+  orderBy?: string;
 }
 export class CreateProductTypeDto {
   @ApiProperty()
@@ -17,7 +23,6 @@ export class CreateProductTypeDto {
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   image: string;
 
   @ApiProperty()
@@ -31,7 +36,6 @@ export class UpdateProductTypeDto {
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   image: string;
 
   @ApiProperty()

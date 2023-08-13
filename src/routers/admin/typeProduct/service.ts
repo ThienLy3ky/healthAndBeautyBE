@@ -2,8 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { ProductType } from "src/entities/types/type.entity";
-import { GetAll } from "./dto/dto";
-import { ByID } from "src/interface/dto";
+import { CreateProductTypeDto, GetAll, UpdateProductTypeDto } from "./dto/dto";
+import { ByID, PaginationRes } from "src/interface/dto";
+import { FindAll, FindAllPagination, checkExit } from "src/utils";
+import { BadRequestException } from "@nestjs/common/exceptions";
 
 @Injectable()
 export class ProductTypeService {
@@ -12,20 +14,58 @@ export class ProductTypeService {
     private readonly productTypeModel: Model<ProductType>,
   ) {}
 
-  async create(createProductTypeDto: any): Promise<ProductType> {
+  async create(
+    createProductTypeDto: CreateProductTypeDto,
+  ): Promise<ProductType> {
+    const { code } = createProductTypeDto;
+    const isExit = await checkExit(this.productTypeModel, {
+      code: code,
+    });
+    if (isExit) throw new BadRequestException("data wrong");
     const newProductType = new this.productTypeModel(createProductTypeDto);
     return newProductType.save();
   }
 
-  async findAll(query: GetAll): Promise<ProductType[]> {
-    return this.productTypeModel.find().lean().exec();
+  async findAll(query: GetAll): Promise<PaginationRes<ProductType>> {
+    const { limit, page, key, order, orderBy } = query;
+    const { items, total } =
+      limit && limit > 0
+        ? await FindAllPagination(
+            this.productTypeModel,
+            key ? { name: { $regex: key, $options: "i" } } : {},
+            { limit, page, order, orderBy },
+          )
+        : await FindAll(
+            this.productTypeModel,
+            key ? { name: { $regex: key, $options: "i" } } : {},
+            { order, orderBy },
+          );
+    return {
+      items,
+      page,
+      limit,
+      total,
+      totalPages: 1,
+    };
   }
 
   async findOne({ id }: ByID): Promise<ProductType> {
     return this.productTypeModel.findById(id).lean().exec();
   }
 
-  async update({ id }: ByID, updateProductTypeDto: any): Promise<ProductType> {
+  async update(
+    { id }: ByID,
+    updateProductTypeDto: UpdateProductTypeDto,
+  ): Promise<ProductType> {
+    const { code } = updateProductTypeDto;
+    const isExit = await checkExit(this.productTypeModel, {
+      _id: id,
+    });
+    const checkCode = await checkExit(this.productTypeModel, {
+      _id: { $ne: id },
+      code: code,
+    });
+    if (!isExit || checkCode) throw new BadRequestException("data wrong");
     return this.productTypeModel.findByIdAndUpdate(id, updateProductTypeDto, {
       new: true,
     });

@@ -12,5 +12,10 @@ import { CategoryService } from "./service";
   ],
   controllers: [CategoryController],
   providers: [CategoryService],
+  exports: [
+    MongooseModule.forFeature([
+      { name: Category.name, schema: CategorySchema },
+    ]),
+  ],
 })
 export class CategoryModule {}

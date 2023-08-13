@@ -2,7 +2,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import Mongoose, { Document } from "mongoose";
 import { ProductSize } from "./size.entity";
-import { SpeciesProduct } from "./species.entity";
+import { StyleProduct } from "./style.entity";
 import { GroupProduct } from "./group.entity";
 import { ProductType } from "./type.entity";
 import { Company } from "./companies.entity";
@@ -22,8 +22,8 @@ class Price {
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "groups" })
   group: GroupProduct;
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "species" })
-  species?: SpeciesProduct;
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "style" })
+  species?: StyleProduct;
 
   @Prop({ type: Number, required: true, min: 0 })
   quantity: number;

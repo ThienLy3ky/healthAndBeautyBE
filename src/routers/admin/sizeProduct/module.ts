@@ -12,5 +12,10 @@ import { ProductSizeService } from "./service";
   ],
   controllers: [ProductSizeController],
   providers: [ProductSizeService],
+  exports: [
+    MongooseModule.forFeature([
+      { name: ProductSize.name, schema: ProductSizeSchema },
+    ]),
+  ],
 })
 export class ProductSizeModule {}

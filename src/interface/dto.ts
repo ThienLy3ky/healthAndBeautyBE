@@ -4,19 +4,21 @@ import { Schema } from "mongoose";
 
 export class Pagination {
   @ApiProperty({ default: 10, minimum: 1 })
-  @IsNotEmpty()
-  limit: number;
+  limit?: number;
 
   @ApiProperty({ default: 1, minimum: 1 })
-  @IsNotEmpty()
-  page: number;
+  page?: number;
 }
 export class ByID {
-  @ApiProperty({
-    default: "64cd0e5c7e912e8e295b687d",
-    type: Schema.Types.ObjectId,
-  })
+  @ApiProperty()
   @IsNotEmpty()
   @IsMongoId()
-  id: Schema.Types.ObjectId;
+  id: string;
+}
+export class PaginationRes<T> {
+  items: T[];
+  totalPages: number;
+  page: number;
+  total: number;
+  limit: number;
 }

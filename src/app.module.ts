@@ -25,7 +25,7 @@ import { GroupProductModule } from "./routers/admin/groupProduct/module";
 import { DrugProductModule } from "./routers/admin/product/module";
 import { SettingModule } from "./routers/admin/setting/module";
 import { ProductSizeModule } from "./routers/admin/sizeProduct/module";
-import { SpeciesProductModule } from "./routers/admin/species/module";
+import { StyleProductModule } from "./routers/admin/styles/module";
 import { UploadModule } from "./routers/upload/module";
 
 @Module({
@@ -47,7 +47,7 @@ import { UploadModule } from "./routers/upload/module";
     SaleModule,
     SettingModule,
     ProductSizeModule,
-    SpeciesProductModule,
+    StyleProductModule,
     UploadModule,
   ],
   controllers: [AppController],

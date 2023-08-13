@@ -5,7 +5,7 @@ import { Admin } from "./admin.entity";
 import { DrugProduct } from "./product.entity";
 import { TypeBill } from "../enum/billType.enum";
 import { ProductSize } from "./size.entity";
-import { SpeciesProduct } from "./species.entity";
+import { StyleProduct } from "./style.entity";
 import { GroupProduct } from "./group.entity";
 class product {
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "products" })
@@ -17,8 +17,8 @@ class product {
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "groups" })
   group: GroupProduct;
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "species" })
-  taste?: SpeciesProduct;
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "style" })
+  taste?: StyleProduct;
 
   @Prop({ type: Number, required: true, min: 0 })
   quantity: number;

@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import Mongoose, { Document } from "mongoose";
 import { Admin } from "./admin.entity";
 
-@Schema({ collection: "species", timestamps: true })
-export class SpeciesProduct extends Document {
+@Schema({ collection: "styles", timestamps: true })
+export class StyleProduct extends Document {
   @Prop({
     type: String,
     required: true, // name is required
@@ -40,5 +40,4 @@ export class SpeciesProduct extends Document {
   isdeleted: Admin;
 }
 
-export const SpeciesProductSchema =
-  SchemaFactory.createForClass(SpeciesProduct);
+export const StyleProductSchema = SchemaFactory.createForClass(StyleProduct);

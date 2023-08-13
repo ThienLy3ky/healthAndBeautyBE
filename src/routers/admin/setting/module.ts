@@ -6,9 +6,12 @@ import { SettingService } from "./service";
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: "Setting", schema: SettingSchema }]),
+    MongooseModule.forFeature([{ name: Setting.name, schema: SettingSchema }]),
   ],
   controllers: [SettingController],
   providers: [SettingService],
+  exports: [
+    MongooseModule.forFeature([{ name: Setting.name, schema: SettingSchema }]),
+  ],
 })
 export class SettingModule {}
