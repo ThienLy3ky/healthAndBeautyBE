@@ -13,7 +13,7 @@ import { Category } from "src/entities/types/categories.entity";
 import { CreateCategoryDto, GetAll, UpdateCategoryDto } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { ByID } from "src/interface/dto";
+import { ByID, PaginationRes } from "src/interface/dto";
 
 @Controller("categories")
 @ApiBearerAuth()
@@ -26,25 +26,25 @@ export class CategoryController {
   }
 
   @Get()
-  async findAll(@Query() query: GetAll): Promise<Category[]> {
+  async findAll(@Query() query: GetAll): Promise<PaginationRes<Category>> {
     return this.companyService.findAll(query);
   }
 
   @Get(":id")
-  async findOne(@Param("id") { id }: ByID): Promise<Category> {
+  async findOne(@Param() { id }: ByID): Promise<Category> {
     return this.companyService.findOne({ id });
   }
 
   @Put(":id")
   async update(
-    @Param("id") { id }: ByID,
+    @Param() { id }: ByID,
     @Body() updateCategory: UpdateCategoryDto,
   ) {
     return this.companyService.update({ id }, updateCategory);
   }
 
   @Delete(":id")
-  async remove(@Param("id") { id }: ByID) {
+  async remove(@Param() { id }: ByID) {
     return this.companyService.remove({ id });
   }
 }

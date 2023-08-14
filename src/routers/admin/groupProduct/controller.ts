@@ -17,7 +17,7 @@ import {
 } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { ByID } from "src/interface/dto";
+import { ByID, PaginationRes } from "src/interface/dto";
 
 @Controller("group-product")
 @ApiBearerAuth()
@@ -30,25 +30,25 @@ export class GroupProductController {
   }
 
   @Get()
-  async findAll(@Query() query: GetAll): Promise<GroupProduct[]> {
+  async findAll(@Query() query: GetAll): Promise<PaginationRes<GroupProduct>> {
     return this.companyService.findAll(query);
   }
 
   @Get(":id")
-  async findOne(@Param("id") { id }: ByID): Promise<GroupProduct> {
+  async findOne(@Param() { id }: ByID): Promise<GroupProduct> {
     return this.companyService.findOne({ id });
   }
 
   @Put(":id")
   async update(
-    @Param("id") { id }: ByID,
+    @Param() { id }: ByID,
     @Body() updateGroupProduct: UpdateGroupProductDto,
   ) {
     return this.companyService.update({ id }, updateGroupProduct);
   }
 
   @Delete(":id")
-  async remove(@Param("id") { id }: ByID) {
+  async remove(@Param() { id }: ByID) {
     return this.companyService.remove({ id });
   }
 }

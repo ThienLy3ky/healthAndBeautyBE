@@ -19,8 +19,6 @@ export class GroupProduct extends Document {
 
   @Prop({
     type: String,
-    minlength: 3, // code must have at least 3 characters
-    maxlength: 10,
     trim: true, // code must have at most 10 characters
   })
   code: string;

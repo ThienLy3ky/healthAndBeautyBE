@@ -12,15 +12,7 @@ export class StyleProduct extends Document {
   name: string;
 
   @Prop({
-    type: String, // image is required
-    match: /^https?:\/\/.+/, // image must be a valid URL
-  })
-  image: string;
-
-  @Prop({
     type: String,
-    minlength: 3, // code must have at least 3 characters
-    maxlength: 10,
     trim: true, // code must have at most 10 characters
   })
   code: string;

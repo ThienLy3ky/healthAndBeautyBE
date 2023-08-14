@@ -13,16 +13,12 @@ export class Category extends Document {
 
   @Prop({
     type: String,
-    required: true, // image is required
     match: /^https?:\/\/.+/, // image must be a valid URL
   })
   image: string;
 
   @Prop({
     type: String,
-    uppercase: true, // convert code to uppercase
-    minlength: 3, // code must have at least 3 characters
-    maxlength: 10,
     trim: true, // code must have at most 10 characters
   })
   code?: string;

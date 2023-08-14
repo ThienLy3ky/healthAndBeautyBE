@@ -23,10 +23,16 @@ export class AppService {
 
   async getTemplate() {
     const [types, groups, categories, setting] = await Promise.all([
-      this.productTypeModel.find().lean(),
-      this.productGroupModel.find().lean(),
-      this.productCategoriesModel.find().lean(),
-      this.settingModel.find().lean(),
+      this.productTypeModel
+        .find({}, { _id: 1, name: 1, code: 1, image: 1 })
+        .lean(),
+      this.productGroupModel
+        .find({}, { _id: 1, name: 1, code: 1, image: 1 })
+        .lean(),
+      this.productCategoriesModel
+        .find({}, { _id: 1, name: 1, code: 1, image: 1 })
+        .lean(),
+      this.settingModel.find({}, { _id: 1, name: 1, code: 1, image: 1 }).lean(),
     ]);
     return { types, groups, categories, setting };
   }

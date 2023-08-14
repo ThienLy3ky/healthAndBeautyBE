@@ -1,12 +1,23 @@
-import { IsPhoneNumber, IsEmail, IsNotEmpty } from "class-validator";
+import { IsEmail, IsNotEmpty } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
 
+import { Pagination } from "src/interface/dto";
 export interface CreateCompanySchema {
   name: string;
   address: string;
   phone: string;
   email: string;
+}
+
+export class GetAll extends Pagination {
+  @ApiProperty({ required: false })
+  key?: string;
+
+  @ApiProperty({ required: false })
+  order?: "asc" | "desc";
+
+  @ApiProperty({ required: false })
+  orderBy?: string;
 }
 export class CreateCompanyDto {
   @ApiProperty()

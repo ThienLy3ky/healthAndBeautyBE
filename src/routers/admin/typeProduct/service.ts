@@ -14,15 +14,13 @@ export class ProductTypeService {
     private readonly productTypeModel: Model<ProductType>,
   ) {}
 
-  async create(
-    createProductTypeDto: CreateProductTypeDto,
-  ): Promise<ProductType> {
-    const { code } = createProductTypeDto;
+  async create(payload: CreateProductTypeDto): Promise<ProductType> {
+    const { code } = payload;
     const isExit = await checkExit(this.productTypeModel, {
       code: code,
     });
     if (isExit) throw new BadRequestException("data wrong");
-    const newProductType = new this.productTypeModel(createProductTypeDto);
+    const newProductType = new this.productTypeModel(payload);
     return newProductType.save();
   }
 
@@ -55,9 +53,9 @@ export class ProductTypeService {
 
   async update(
     { id }: ByID,
-    updateProductTypeDto: UpdateProductTypeDto,
+    payload: UpdateProductTypeDto,
   ): Promise<ProductType> {
-    const { code } = updateProductTypeDto;
+    const { code } = payload;
     const isExit = await checkExit(this.productTypeModel, {
       _id: id,
     });
@@ -66,7 +64,7 @@ export class ProductTypeService {
       code: code,
     });
     if (!isExit || checkCode) throw new BadRequestException("data wrong");
-    return this.productTypeModel.findByIdAndUpdate(id, updateProductTypeDto, {
+    return this.productTypeModel.findByIdAndUpdate(id, payload, {
       new: true,
     });
   }

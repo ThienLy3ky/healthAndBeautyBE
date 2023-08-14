@@ -3,18 +3,17 @@ import {
   Controller,
   Delete,
   Get,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   Param,
   Post,
-  BadRequestException,
   Put,
+  Query,
 } from "@nestjs/common";
 import { CompanyService } from "./service";
 import { Company } from "src/entities/types/companies.entity";
-import { CreateCompanyDto, UpdateCompanyDto } from "./dto/dto";
+import { CreateCompanyDto, GetAll, UpdateCompanyDto } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ByID, PaginationRes } from "src/interface/dto";
 
 @Controller("company")
 @ApiBearerAuth()
@@ -23,37 +22,26 @@ export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
   @Post()
   async create(@Body() createCompany: CreateCompanyDto) {
-    try {
-      return this.companyService.create(createCompany);
-    } catch (error) {
-      console.log(
-        "🚀 ~ file: service.ts:19 ~ CompanyService ~ create ~ error:",
-        error,
-      );
-      throw new BadRequestException("error");
-    }
+    return this.companyService.create(createCompany);
   }
 
   @Get()
-  async findAll(): Promise<Company[]> {
-    return this.companyService.findAll();
+  async findAll(@Query() query: GetAll): Promise<PaginationRes<Company>> {
+    return this.companyService.findAll(query);
   }
 
   @Get(":id")
-  async findOne(@Param("id") id: string): Promise<Company> {
-    return this.companyService.findOne(id);
+  async findOne(@Param() { id }: ByID): Promise<Company> {
+    return this.companyService.findOne({ id });
   }
 
   @Put(":id")
-  async update(
-    @Param("id") id: string,
-    @Body() updateCompany: UpdateCompanyDto,
-  ) {
-    return this.companyService.update(id, updateCompany);
+  async update(@Param() { id }: ByID, @Body() updateCompany: UpdateCompanyDto) {
+    return this.companyService.update({ id }, updateCompany);
   }
 
   @Delete(":id")
-  async remove(@Param("id") id: string) {
-    return this.companyService.remove(id);
+  async remove(@Param() { id }: ByID) {
+    return this.companyService.remove({ id });
   }
 }

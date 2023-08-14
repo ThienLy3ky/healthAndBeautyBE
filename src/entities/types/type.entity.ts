@@ -18,9 +18,7 @@ export class ProductType extends Document {
   image: string;
 
   @Prop({
-    type: String, // convert code to uppercase
-    minlength: 3, // code must have at least 3 characters
-    maxlength: 10, // code must have at most 10 characters
+    type: String, // code must have at most 10 characters
   })
   code?: string;
 

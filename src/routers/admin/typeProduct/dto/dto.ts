@@ -1,5 +1,5 @@
-import { IsPhoneNumber, IsEmail, IsNotEmpty } from "class-validator";
-import { ApiProperty, ApiOperation } from "@nestjs/swagger";
+import { IsNotEmpty } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 import { Pagination } from "src/interface/dto";
 
 export interface CreateProductTypeSchema {
@@ -23,7 +23,7 @@ export class CreateProductTypeDto {
   name: string;
 
   @ApiProperty()
-  image: string;
+  image?: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -36,7 +36,7 @@ export class UpdateProductTypeDto {
   name: string;
 
   @ApiProperty()
-  image: string;
+  image?: string;
 
   @ApiProperty()
   @IsNotEmpty()

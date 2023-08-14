@@ -17,26 +17,26 @@ import {
 } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { ByID } from "src/interface/dto";
+import { ByID, PaginationRes } from "src/interface/dto";
 
 @Controller("style-product")
 @ApiBearerAuth()
 @ApiTags("styles")
 export class StyleProductController {
-  constructor(private readonly companyService: StyleProductService) {}
+  constructor(private readonly StyleService: StyleProductService) {}
   @Post()
   async create(@Body() createStyleProduct: CreateStyleProductDto) {
-    return this.companyService.create(createStyleProduct);
+    return this.StyleService.create(createStyleProduct);
   }
 
   @Get()
-  async findAll(@Query() query: GetAll): Promise<StyleProduct[]> {
-    return this.companyService.findAll(query);
+  async findAll(@Query() query: GetAll): Promise<PaginationRes<StyleProduct>> {
+    return this.StyleService.findAll(query);
   }
 
   @Get(":id")
   async findOne(@Param() { id }: ByID): Promise<StyleProduct> {
-    return this.companyService.findOne({ id });
+    return this.StyleService.findOne({ id });
   }
 
   @Put(":id")
@@ -44,11 +44,11 @@ export class StyleProductController {
     @Param() { id }: ByID,
     @Body() updateStyleProduct: UpdateStyleProductDto,
   ) {
-    return this.companyService.update({ id }, updateStyleProduct);
+    return this.StyleService.update({ id }, updateStyleProduct);
   }
 
   @Delete(":id")
   async remove(@Param() { id }: ByID) {
-    return this.companyService.remove({ id });
+    return this.StyleService.remove({ id });
   }
 }

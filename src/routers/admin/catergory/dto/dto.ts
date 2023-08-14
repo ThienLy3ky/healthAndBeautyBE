@@ -9,8 +9,14 @@ export interface CreateCategorySchema {
   description: string;
 }
 export class GetAll extends Pagination {
-  @ApiProperty()
-  key: string;
+  @ApiProperty({ required: false })
+  key?: string;
+
+  @ApiProperty({ required: false })
+  order?: "asc" | "desc";
+
+  @ApiProperty({ required: false })
+  orderBy?: string;
 }
 export class CreateCategoryDto {
   @ApiProperty()
