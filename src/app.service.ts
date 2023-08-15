@@ -32,7 +32,7 @@ export class AppService {
       this.productCategoriesModel
         .find({}, { _id: 1, name: 1, code: 1, image: 1 })
         .lean(),
-      this.settingModel.find({}, { _id: 1, name: 1, code: 1, image: 1 }).lean(),
+      this.settingModel.findOne().lean(),
     ]);
     return { types, groups, categories, setting };
   }

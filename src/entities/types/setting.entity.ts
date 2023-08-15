@@ -29,7 +29,6 @@ export class Setting extends Document {
   @Prop({
     type: String, // name is required
     trim: true,
-    match: /^https?:\/\/.+/,
   })
   SDT: string;
 
@@ -41,7 +40,6 @@ export class Setting extends Document {
 
   @Prop({
     type: String,
-    required: true,
     trim: true, // code must have at most 10 characters
   })
   address: string;

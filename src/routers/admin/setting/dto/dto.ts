@@ -1,53 +1,23 @@
-import { IsPhoneNumber, IsEmail, IsNotEmpty } from "class-validator";
-import { ApiProperty, ApiOperation } from "@nestjs/swagger";
+import { IsEmail } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
-export interface CreateSettingSchema {
-  name: string;
-  address: string;
-  phone: string;
-  email: string;
-}
 export class CreateSettingDto {
   @ApiProperty()
-  @IsNotEmpty()
-  name: string;
+  FBlink: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  address: string;
+  Zalolink: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsPhoneNumber()
-  phone: string;
+  SDT: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   @IsEmail()
   email: string;
-}
 
-export interface UpdateSettingSchema {
-  name?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-}
+  @ApiProperty()
+  description: string;
 
-export class UpdateSettingDto {
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  name: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
+  @ApiProperty()
   address: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  phone: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  email: string;
 }
