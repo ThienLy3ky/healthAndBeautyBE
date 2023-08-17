@@ -5,13 +5,19 @@ import { ProductType } from "./entities/types/type.entity";
 import { ProductSize } from "./entities/types/size.entity";
 import { Category } from "./entities/types/categories.entity";
 import { Setting } from "./entities/types/setting.entity";
+import { GroupProduct } from "./entities/types/group.entity";
+import { StyleProduct } from "./entities/types/style.entity";
 @Injectable()
 export class AppService {
   constructor(
+    @InjectModel(GroupProduct.name)
+    private readonly productGroupModel: Model<GroupProduct>,
+    @InjectModel(StyleProduct.name)
+    private readonly productStyleModel: Model<StyleProduct>,
     @InjectModel(ProductType.name)
     private readonly productTypeModel: Model<ProductType>,
     @InjectModel(ProductSize.name)
-    private readonly productGroupModel: Model<ProductSize>,
+    private readonly productSizeModel: Model<ProductSize>,
     @InjectModel(Category.name)
     private readonly productCategoriesModel: Model<Category>,
     @InjectModel(Setting.name)
@@ -22,18 +28,25 @@ export class AppService {
   }
 
   async getTemplate() {
-    const [types, groups, categories, setting] = await Promise.all([
+    const [types, categories, setting] = await Promise.all([
       this.productTypeModel
         .find({}, { _id: 1, name: 1, code: 1, image: 1 })
         .lean(),
-      this.productGroupModel
-        .find({}, { _id: 1, name: 1, code: 1, image: 1 })
-        .lean(),
+
       this.productCategoriesModel
         .find({}, { _id: 1, name: 1, code: 1, image: 1 })
         .lean(),
       this.settingModel.findOne().lean(),
     ]);
-    return { types, groups, categories, setting };
+    return { types, categories, setting };
+  }
+  async getGroupPrice() {
+    const [group, size, style] = await Promise.all([
+      this.productGroupModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
+      this.productSizeModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
+      this.productStyleModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
+      // this.settingModel.findOne().lean(),
+    ]);
+    return { group, size, style };
   }
 }

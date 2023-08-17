@@ -17,7 +17,7 @@ import { ByID, PaginationRes } from "src/interface/dto";
 
 @Controller("product")
 @ApiBearerAuth()
-@ApiTags("Product")
+@ApiTags("product")
 export class DrugProductController {
   constructor(private readonly companyService: DrugProductService) {}
   @Post()
@@ -31,20 +31,20 @@ export class DrugProductController {
   }
 
   @Get(":id")
-  async findOne(@Param("id") { id }: ByID): Promise<DrugProduct> {
+  async findOne(@Param() { id }: ByID): Promise<DrugProduct> {
     return this.companyService.findOne({ id });
   }
 
   @Put(":id")
   async update(
-    @Param("id") { id }: ByID,
+    @Param() { id }: ByID,
     @Body() updateDrugProduct: UpdateDrugProductDto,
   ) {
     return this.companyService.update({ id }, updateDrugProduct);
   }
 
   @Delete(":id")
-  async remove(@Param("id") { id }: ByID) {
+  async remove(@Param() { id }: ByID) {
     return this.companyService.remove({ id });
   }
 }

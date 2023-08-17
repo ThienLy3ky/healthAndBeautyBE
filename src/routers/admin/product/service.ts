@@ -4,13 +4,7 @@ import { Model } from "mongoose";
 import { DrugProduct } from "src/entities/types/product.entity";
 import { CreateDrugProductDto, GetAll, UpdateDrugProductDto } from "./dto/dto";
 import { ByID, PaginationRes } from "src/interface/dto";
-import {
-  FindAll,
-  FindAllPagination,
-  checkExit,
-  populatedAll,
-  populatedAllPagination,
-} from "src/utils";
+import { checkExit, populatedAll, populatedAllPagination } from "src/utils";
 
 @Injectable()
 export class DrugProductService {
