@@ -13,7 +13,7 @@ import { DrugProduct } from "src/entities/types/product.entity";
 import { CreateDrugProductDto, GetAll, UpdateDrugProductDto } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { ByID } from "src/interface/dto";
+import { ByID, PaginationRes } from "src/interface/dto";
 
 @Controller("product")
 @ApiBearerAuth()
@@ -26,7 +26,7 @@ export class DrugProductController {
   }
 
   @Get()
-  async findAll(@Query() query: GetAll): Promise<DrugProduct[]> {
+  async findAll(@Query() query: GetAll): Promise<PaginationRes<DrugProduct>> {
     return this.companyService.findAll(query);
   }
 

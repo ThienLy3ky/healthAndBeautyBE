@@ -1,5 +1,5 @@
-import { IsPhoneNumber, IsEmail, IsNotEmpty } from "class-validator";
-import { ApiProperty, ApiOperation } from "@nestjs/swagger";
+import { IsNotEmpty } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 import { Pagination } from "src/interface/dto";
 import { Schema } from "mongoose";
 
@@ -24,8 +24,14 @@ class CreateDrugProductSchema {
   image: string;
 }
 export class GetAll extends Pagination {
-  @ApiProperty()
-  key: string;
+  @ApiProperty({ required: false })
+  key?: string;
+
+  @ApiProperty({ required: false })
+  order?: "asc" | "desc";
+
+  @ApiProperty({ required: false })
+  orderBy?: string;
 }
 export class CreateDrugProductDto {
   @ApiProperty()
@@ -36,9 +42,19 @@ export class CreateDrugProductDto {
   description: string;
 
   @ApiProperty()
-  summary: string;
+  code: string;
 
   @ApiProperty()
+  summary: string;
+
+  @ApiProperty({
+    isArray: true,
+    type: () => [String],
+  })
+  // @IsArray()
+  // "each" tells class-validator to run the validation on each item of the array
+  // @IsString({ each: true })
+  // @ArrayMinSize(1)
   keyWord: string[];
 
   @ApiProperty({ type: [CreateDrugProductSchema] })
@@ -64,6 +80,9 @@ export class UpdateDrugProductDto {
 
   @ApiProperty()
   description: string;
+
+  @ApiProperty()
+  code: string;
 
   @ApiProperty()
   summary: string;

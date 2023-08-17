@@ -10,7 +10,7 @@ import { Category } from "./categories.entity";
 
 export type DrugProductDocument = DrugProduct & Document;
 class Price {
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "sizes" })
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "ProductSize" })
   size: ProductSize;
 
   @Prop({ type: Number, min: 0 })
@@ -19,10 +19,10 @@ class Price {
   @Prop({ type: Number, required: true, min: 0 })
   priceNew: number;
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "groups" })
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "GroupProduct" })
   group: GroupProduct;
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "style" })
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "StyleProduct" })
   species?: StyleProduct;
 
   @Prop({ type: Number, required: true, min: 0 })
@@ -46,19 +46,19 @@ export class DrugProduct {
   @Prop({ type: String })
   summary?: string;
 
-  @Prop({ type: String })
+  @Prop({ type: [String] })
   keyWord?: string[];
 
   @Prop({ type: Price, min: 0 })
   price: Price[];
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "companies" })
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "Company" })
   company: Company;
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "types" })
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "ProductType" })
   type: ProductType;
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "categories" })
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "Category" })
   categories: Category;
 
   @Prop({
