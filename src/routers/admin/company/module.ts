@@ -10,5 +10,8 @@ import { CompanyService } from "./service";
   ],
   controllers: [CompanyController],
   providers: [CompanyService],
+  exports: [
+    MongooseModule.forFeature([{ name: Company.name, schema: CompanySchema }]),
+  ],
 })
 export class CompanyModule {}

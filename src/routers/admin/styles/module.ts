@@ -15,5 +15,10 @@ import { StyleProductService } from "./service";
   ],
   controllers: [StyleProductController],
   providers: [StyleProductService],
+  exports: [
+    MongooseModule.forFeature([
+      { name: StyleProduct.name, schema: StyleProductSchema },
+    ]),
+  ],
 })
 export class StyleProductModule {}

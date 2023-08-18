@@ -15,5 +15,10 @@ import { GroupProductService } from "./service";
   ],
   controllers: [GroupProductController],
   providers: [GroupProductService],
+  exports: [
+    MongooseModule.forFeature([
+      { name: GroupProduct.name, schema: GroupProductSchema },
+    ]),
+  ],
 })
 export class GroupProductModule {}

@@ -8,4 +8,8 @@ export class AppController {
   getTemplate() {
     return this.appService.getTemplate();
   }
+  @Get("/admin-template")
+  getTemplateAdmin() {
+    return this.appService.getGroupPrice();
+  }
 }
