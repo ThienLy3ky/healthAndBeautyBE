@@ -8,45 +8,16 @@ import {
   Query,
   Put,
   UseInterceptors,
-  UploadedFiles,
+  UploadedFile,
 } from "@nestjs/common";
 import { ProductTypeService } from "./service";
 import { ProductType } from "src/entities/types/type.entity";
 import { CreateProductTypeDto, GetAll, UpdateProductTypeDto } from "./dto/dto";
-import { Express } from "express";
 import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { ByID, PaginationRes } from "src/interface/dto";
-import { diskStorage } from "multer";
-import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
-import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
-
-const imageFilter = (
-  req: Request,
-  file: Express.Multer.File,
-  callback: (error: Error, acceptFile: boolean) => void,
-) => {
-  if (!Boolean(file.mimetype.match(/(jpg|jpeg|png|gif)/)))
-    callback(null, false);
-  callback(null, true);
-};
-
-export const imageOptions: MulterOptions = {
-  limits: { fileSize: 5242880 },
-  fileFilter: imageFilter,
-  dest: "upload/",
-  // storage: diskStorage({
-  //   destination: "./uploads",
-  //   filename: (req, file, cb) => {
-  //     // Generating a 32 random chars long string
-  //     // const randomName = Array(32)
-  //     //   .fill(null)
-  //     //   .map(() => Math.round(Math.random() * 16).toString(16))
-  //     //   .join("");
-  //     // //Calling the callback passing the random name generated with the original extension name
-  //     // cb(null, `${randomName}${extname(file.originalname)}`);
-  //   },
-  // }),
-};
+import { FileInterceptor } from "@nestjs/platform-express";
+import { uploadFile } from "src/firebase";
+import { imageOptions } from "src/utils";
 
 @Controller("type-product")
 @ApiBearerAuth()
@@ -56,15 +27,15 @@ export class ProductTypeController {
 
   @Post()
   @ApiConsumes("multipart/form-data")
-  @UseInterceptors(FilesInterceptor("images", 5, imageOptions))
+  @UseInterceptors(FileInterceptor("images", imageOptions))
   async create(
     @Body() createProductType: CreateProductTypeDto,
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFile() images: Express.Multer.File,
   ) {
-    console.log(
-      "🚀 ~ file: controller.ts:50 ~ ProductTypeController ~ file:",
-      images,
-    );
+    if (images) {
+      const fileurl = await uploadFile(images.path);
+      createProductType.image = fileurl.toString();
+    }
     return this.companyService.create(createProductType);
   }
 
@@ -79,10 +50,17 @@ export class ProductTypeController {
   }
 
   @Put(":id")
+  @ApiConsumes("multipart/form-data")
+  @UseInterceptors(FileInterceptor("images", imageOptions))
   async update(
     @Param() { id }: ByID,
     @Body() updateProductType: UpdateProductTypeDto,
+    @UploadedFile() images: Express.Multer.File,
   ) {
+    if (images) {
+      const fileurl = await uploadFile(images.path);
+      updateProductType.image = fileurl.toString();
+    }
     return this.companyService.update({ id }, updateProductType);
   }
 

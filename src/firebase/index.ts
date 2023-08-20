@@ -1,4 +1,5 @@
 import admin from "firebase-admin";
+import * as fs from "fs";
 import * as uuid from "uuid";
 import * as firebaseConfig from "../../config/hbshops-34e0a-firebase-adminsdk-210kc-b1ff2d11d3.json";
 const firebase_params = {
@@ -18,7 +19,7 @@ admin.initializeApp({
   storageBucket: "hbshops-34e0a.appspot.com",
 });
 const bucket = admin.storage().bucket();
-export async function uploadFile(file = __dirname + "/logo512.png") {
+export async function uploadFile(file) {
   const metadata = {
     metadata: {
       firebaseStorageDownloadTokens: uuid.v4(),
@@ -31,15 +32,11 @@ export async function uploadFile(file = __dirname + "/logo512.png") {
       gzip: true,
       metadata: metadata,
     });
-    const getUrl = await bucket.file("logo512.png").getSignedUrl({
+    fs.unlinkSync(file);
+    const getUrl = await bucket.file(url[0]?.id).getSignedUrl({
       action: "read",
-      expires: "",
+      expires: "01-26-2500",
     });
-    console.log(
-      `${file} uploaded.`,
-      `${url[1].mediaLink}&token=${url[1].metadata.firebaseStorageDownloadTokens}`,
-      getUrl,
-    );
     return getUrl;
   } catch (error) {
     console.log(error);

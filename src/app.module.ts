@@ -27,6 +27,8 @@ import { SettingModule } from "./routers/admin/setting/module";
 import { ProductSizeModule } from "./routers/admin/sizeProduct/module";
 import { StyleProductModule } from "./routers/admin/styles/module";
 import { UploadModule } from "./routers/upload/module";
+import { MulterModule } from "@nestjs/platform-express";
+import { diskStorage } from "multer";
 
 @Module({
   imports: [
@@ -34,6 +36,11 @@ import { UploadModule } from "./routers/upload/module";
     ConfigModule.forRoot({
       isGlobal: true,
       load: [config],
+    }),
+    MulterModule.register({
+      storage: diskStorage({
+        destination: "./uploads",
+      }),
     }),
     CompanyModule,
     ProductTypeModule,

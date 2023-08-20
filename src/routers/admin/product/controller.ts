@@ -7,12 +7,16 @@ import {
   Post,
   Query,
   Put,
+  UseInterceptors,
+  UploadedFiles,
 } from "@nestjs/common";
 import { DrugProductService } from "./service";
 import { DrugProduct } from "src/entities/types/product.entity";
 import { CreateDrugProductDto, GetAll, UpdateDrugProductDto } from "./dto/dto";
-
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { FilesInterceptor } from "@nestjs/platform-express";
+import { uploadFile } from "src/firebase";
+import { imageOptions } from "src/utils";
 import { ByID, PaginationRes } from "src/interface/dto";
 
 @Controller("product")
@@ -20,6 +24,16 @@ import { ByID, PaginationRes } from "src/interface/dto";
 @ApiTags("product")
 export class DrugProductController {
   constructor(private readonly companyService: DrugProductService) {}
+
+  @Post("/upload")
+  @ApiConsumes("multipart/form-data")
+  @UseInterceptors(FilesInterceptor("images", 1, imageOptions))
+  async uploadPr(@UploadedFiles() images: Express.Multer.File[]) {
+    if (images.length > 0) {
+      return await uploadFile(images[0].path);
+    }
+  }
+
   @Post()
   async create(@Body() createDrugProduct: CreateDrugProductDto) {
     return this.companyService.create(createDrugProduct);

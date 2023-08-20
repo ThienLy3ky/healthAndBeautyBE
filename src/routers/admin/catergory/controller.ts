@@ -7,12 +7,17 @@ import {
   Post,
   Query,
   Put,
+  UseInterceptors,
+  UploadedFiles,
+  UploadedFile,
 } from "@nestjs/common";
 import { CategoryService } from "./service";
 import { Category } from "src/entities/types/categories.entity";
 import { CreateCategoryDto, GetAll, UpdateCategoryDto } from "./dto/dto";
-
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { uploadFile } from "src/firebase";
+import { imageOptions } from "src/utils";
 import { ByID, PaginationRes } from "src/interface/dto";
 
 @Controller("categories")
@@ -20,8 +25,18 @@ import { ByID, PaginationRes } from "src/interface/dto";
 @ApiTags("categories")
 export class CategoryController {
   constructor(private readonly companyService: CategoryService) {}
+
   @Post()
-  async create(@Body() createCategory: CreateCategoryDto) {
+  @ApiConsumes("multipart/form-data")
+  @UseInterceptors(FileInterceptor("images", imageOptions))
+  async create(
+    @Body() createCategory: CreateCategoryDto,
+    @UploadedFile() images: Express.Multer.File,
+  ) {
+    if (images) {
+      const fileurl = await uploadFile(images.path);
+      createCategory.image = fileurl.toString();
+    }
     return this.companyService.create(createCategory);
   }
 
@@ -36,10 +51,17 @@ export class CategoryController {
   }
 
   @Put(":id")
+  @ApiConsumes("multipart/form-data")
+  @UseInterceptors(FileInterceptor("images", imageOptions))
   async update(
     @Param() { id }: ByID,
     @Body() updateCategory: UpdateCategoryDto,
+    @UploadedFile() images: Express.Multer.File,
   ) {
+    if (images) {
+      const fileurl = await uploadFile(images.path);
+      updateCategory.image = fileurl.toString();
+    }
     return this.companyService.update({ id }, updateCategory);
   }
 

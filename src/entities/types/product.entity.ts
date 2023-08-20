@@ -23,7 +23,7 @@ class Price {
   group: GroupProduct;
 
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "StyleProduct" })
-  species?: StyleProduct;
+  style?: StyleProduct;
 
   @Prop({ type: Number, required: true, min: 0 })
   quantity: number;
@@ -39,6 +39,9 @@ class Price {
 export class DrugProduct {
   @Prop({ type: String, required: true, unique: true })
   name: string;
+
+  @Prop({ type: String })
+  code?: string;
 
   @Prop({ type: String })
   description?: string;

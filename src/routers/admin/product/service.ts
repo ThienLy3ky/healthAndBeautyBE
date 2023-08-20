@@ -37,7 +37,7 @@ export class DrugProductService {
             select: field,
           },
           {
-            path: "species",
+            path: "style",
             model: "StyleProduct",
             select: field,
           },

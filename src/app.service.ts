@@ -7,6 +7,7 @@ import { Category } from "./entities/types/categories.entity";
 import { Setting } from "./entities/types/setting.entity";
 import { GroupProduct } from "./entities/types/group.entity";
 import { StyleProduct } from "./entities/types/style.entity";
+import { Company } from "./entities/types/companies.entity";
 @Injectable()
 export class AppService {
   constructor(
@@ -20,6 +21,9 @@ export class AppService {
     private readonly productSizeModel: Model<ProductSize>,
     @InjectModel(Category.name)
     private readonly productCategoriesModel: Model<Category>,
+
+    @InjectModel(Company.name)
+    private readonly CompanyModel: Model<Company>,
     @InjectModel(Setting.name)
     private readonly settingModel: Model<Setting>,
   ) {}
@@ -41,12 +45,13 @@ export class AppService {
     return { types, categories, setting };
   }
   async getGroupPrice() {
-    const [group, size, style] = await Promise.all([
+    const [groups, sizes, styles, companies] = await Promise.all([
       this.productGroupModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
       this.productSizeModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
       this.productStyleModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
+      this.CompanyModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
       // this.settingModel.findOne().lean(),
     ]);
-    return { group, size, style };
+    return { groups, sizes, styles, companies };
   }
 }
