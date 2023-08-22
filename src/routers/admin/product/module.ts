@@ -19,11 +19,9 @@ import { getNameFile, makeid } from "src/utils";
       storage: diskStorage({
         destination: "./uploads",
         filename: (req, file, cb) => {
+          console.log("🚀 ~ file: module.ts:22 ~ file:", file);
           const date = new Date();
-          return cb(
-            null,
-            `product-${makeid(7) + date + getNameFile(req, file)}`,
-          );
+          return cb(null, file.originalname);
         },
       }),
     }),

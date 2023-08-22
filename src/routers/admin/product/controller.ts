@@ -27,11 +27,16 @@ export class DrugProductController {
 
   @Post("/upload")
   @ApiConsumes("multipart/form-data")
-  @UseInterceptors(FilesInterceptor("images", 1, imageOptions))
+  @UseInterceptors(FilesInterceptor("images", 5, imageOptions))
   async uploadPr(@UploadedFiles() images: Express.Multer.File[]) {
-    if (images.length > 0) {
-      return await uploadFile(images[0].path);
-    }
+    console.log(
+      "🚀 ~ file: controller.ts:32 ~ DrugProductController ~ uploadPr ~ images:",
+      images,
+    );
+
+    // if (images.length > 0) {
+    //   return await uploadFile(images[0].path);
+    // }
   }
 
   @Post()
