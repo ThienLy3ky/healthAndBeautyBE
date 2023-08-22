@@ -8,7 +8,7 @@ import { DrugProductController } from "./controller";
 import { DrugProductService } from "./service";
 import { MulterModule } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
-import { getNameFile } from "src/utils";
+import { getNameFile, makeid } from "src/utils";
 
 @Module({
   imports: [
@@ -19,7 +19,11 @@ import { getNameFile } from "src/utils";
       storage: diskStorage({
         destination: "./uploads",
         filename: (req, file, cb) => {
-          return cb(null, `product-${getNameFile(req, file)}`);
+          const date = new Date();
+          return cb(
+            null,
+            `product-${makeid(7) + date + getNameFile(req, file)}`,
+          );
         },
       }),
     }),
