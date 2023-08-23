@@ -13,7 +13,7 @@ import { ProductSize } from "src/entities/types/size.entity";
 import { CreateProductSizeDto, GetAll, UpdateProductSizeDto } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { ByID, PaginationRes } from "src/interface/dto";
+import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 
 @Controller("size-product")
 @ApiBearerAuth()
@@ -46,5 +46,10 @@ export class ProductSizeController {
   @Delete(":id")
   async remove(@Param() { id }: ByID) {
     return this.SizeService.remove({ id });
+  }
+
+  @Get(":code")
+  async checkCode(@Param() { code }: CodeParam) {
+    return this.checkCode({ code });
   }
 }

@@ -8,7 +8,6 @@ import {
   Query,
   Put,
   UseInterceptors,
-  UploadedFiles,
   UploadedFile,
 } from "@nestjs/common";
 import { CategoryService } from "./service";
@@ -18,13 +17,13 @@ import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { uploadFile } from "src/firebase";
 import { imageOptions } from "src/utils";
-import { ByID, PaginationRes } from "src/interface/dto";
+import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 
 @Controller("categories")
 @ApiBearerAuth()
 @ApiTags("categories")
 export class CategoryController {
-  constructor(private readonly companyService: CategoryService) {}
+  constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
   @ApiConsumes("multipart/form-data")
@@ -37,17 +36,17 @@ export class CategoryController {
       const fileurl = await uploadFile(images.path);
       createCategory.image = fileurl.toString();
     }
-    return this.companyService.create(createCategory);
+    return this.categoryService.create(createCategory);
   }
 
   @Get()
   async findAll(@Query() query: GetAll): Promise<PaginationRes<Category>> {
-    return this.companyService.findAll(query);
+    return this.categoryService.findAll(query);
   }
 
   @Get(":id")
   async findOne(@Param() { id }: ByID): Promise<Category> {
-    return this.companyService.findOne({ id });
+    return this.categoryService.findOne({ id });
   }
 
   @Put(":id")
@@ -62,11 +61,18 @@ export class CategoryController {
       const fileurl = await uploadFile(images.path);
       updateCategory.image = fileurl.toString();
     }
-    return this.companyService.update({ id }, updateCategory);
+    return this.categoryService.update({ id }, updateCategory);
   }
 
   @Delete(":id")
   async remove(@Param() { id }: ByID) {
-    return this.companyService.remove({ id });
+    return this.categoryService.remove({ id });
+  }
+  @Post("/check/:code")
+  async checkCode(
+    @Param() { code }: CodeParam,
+    @Body() updateDrugProduct: UpdateCategoryDto,
+  ) {
+    return this.categoryService.checkCode({ code });
   }
 }

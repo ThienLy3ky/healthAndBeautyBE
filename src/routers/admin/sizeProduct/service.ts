@@ -3,7 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { ProductSize } from "src/entities/types/size.entity";
 import { CreateProductSizeDto, GetAll, UpdateProductSizeDto } from "./dto/dto";
-import { ByID, PaginationRes } from "src/interface/dto";
+import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import { FindAll, FindAllPagination, checkExit } from "src/utils";
 import { BadRequestException } from "@nestjs/common/exceptions";
 
@@ -71,5 +71,12 @@ export class ProductSizeService {
 
   async remove({ id }: ByID): Promise<ProductSize> {
     return this.productSizeModel.findByIdAndDelete(id);
+  }
+  async checkCode({ code }: CodeParam): Promise<boolean> {
+    return (await checkExit(this.productSizeModel, {
+      code: code,
+    }))
+      ? true
+      : false;
   }
 }

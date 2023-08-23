@@ -3,7 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Category } from "src/entities/types/categories.entity";
 import { CreateCategoryDto, GetAll, UpdateCategoryDto } from "./dto/dto";
-import { ByID, PaginationRes } from "src/interface/dto";
+import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import { FindAll, FindAllPagination, checkExit } from "src/utils";
 import { BadRequestException } from "@nestjs/common/exceptions";
 
@@ -52,15 +52,10 @@ export class CategoryService {
   }
 
   async update({ id }: ByID, payload: UpdateCategoryDto): Promise<Category> {
-    const { code } = payload;
     const isExit = await checkExit(this.categoriesModel, {
       _id: id,
     });
-    const checkCode = await checkExit(this.categoriesModel, {
-      _id: { $ne: id },
-      code: code,
-    });
-    if (!isExit || checkCode) throw new BadRequestException("data wrong");
+    if (!isExit) throw new BadRequestException("data wrong");
     return this.categoriesModel.findByIdAndUpdate(id, payload, {
       new: true,
     });
@@ -68,5 +63,12 @@ export class CategoryService {
 
   async remove({ id }: ByID): Promise<Category> {
     return this.categoriesModel.findByIdAndDelete(id);
+  }
+  async checkCode({ code }: CodeParam): Promise<boolean> {
+    return (await checkExit(this.categoriesModel, {
+      code: code,
+    }))
+      ? true
+      : false;
   }
 }

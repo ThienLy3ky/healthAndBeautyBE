@@ -43,3 +43,12 @@ export async function uploadFile(file) {
     return false;
   }
 }
+export async function deleteFile(file) {
+  try {
+    const getUrl = await bucket.file(file).delete();
+    return getUrl;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}

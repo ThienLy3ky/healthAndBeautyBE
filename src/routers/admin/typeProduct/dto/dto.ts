@@ -37,8 +37,4 @@ export class UpdateProductTypeDto {
 
   @ApiProperty()
   image?: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  code: string;
 }

@@ -3,8 +3,9 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { DrugProduct } from "src/entities/types/product.entity";
 import { CreateDrugProductDto, GetAll, UpdateDrugProductDto } from "./dto/dto";
-import { ByID, PaginationRes } from "src/interface/dto";
+import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import { checkExit, populatedAll, populatedAllPagination } from "src/utils";
+import { uploadFile } from "src/firebase";
 
 @Injectable()
 export class DrugProductService {
@@ -80,15 +81,10 @@ export class DrugProductService {
     { id }: ByID,
     payload: UpdateDrugProductDto,
   ): Promise<DrugProduct> {
-    const { code } = payload;
     const isExit = await checkExit(this.productModel, {
       _id: id,
     });
-    const checkCode = await checkExit(this.productModel, {
-      _id: { $ne: id },
-      code: code,
-    });
-    if (!isExit || checkCode) throw new BadRequestException("data wrong");
+    if (!isExit) throw new BadRequestException("data wrong");
     return this.productModel.findByIdAndUpdate(id, payload, {
       new: true,
     });
@@ -96,5 +92,25 @@ export class DrugProductService {
 
   async remove({ id }: ByID): Promise<DrugProduct> {
     return this.productModel.findByIdAndDelete(id);
+  }
+
+  async checkCode({ code }: CodeParam): Promise<boolean> {
+    return (await checkExit(this.productModel, {
+      code: code,
+    }))
+      ? true
+      : false;
+  }
+  async Upload(images: any[]) {
+    const list = [];
+    if (images.length <= 0) {
+      return;
+      //   return await uploadFile(images.path);
+    }
+    for (let index = 0; index < images.length; index++) {
+      const element = await uploadFile(images[index].path);
+      list.push(element[0]);
+    }
+    return list;
   }
 }

@@ -14,7 +14,7 @@ import { ProductTypeService } from "./service";
 import { ProductType } from "src/entities/types/type.entity";
 import { CreateProductTypeDto, GetAll, UpdateProductTypeDto } from "./dto/dto";
 import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
-import { ByID, PaginationRes } from "src/interface/dto";
+import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { uploadFile } from "src/firebase";
 import { imageOptions } from "src/utils";
@@ -23,7 +23,7 @@ import { imageOptions } from "src/utils";
 @ApiBearerAuth()
 @ApiTags("Type Product")
 export class ProductTypeController {
-  constructor(private readonly companyService: ProductTypeService) {}
+  constructor(private readonly TypeService: ProductTypeService) {}
 
   @Post()
   @ApiConsumes("multipart/form-data")
@@ -36,17 +36,17 @@ export class ProductTypeController {
       const fileurl = await uploadFile(images.path);
       createProductType.image = fileurl.toString();
     }
-    return this.companyService.create(createProductType);
+    return this.TypeService.create(createProductType);
   }
 
   @Get()
   async findAll(@Query() query: GetAll): Promise<PaginationRes<ProductType>> {
-    return this.companyService.findAll(query);
+    return this.TypeService.findAll(query);
   }
 
   @Get(":id")
   async findOne(@Param() { id }: ByID): Promise<ProductType> {
-    return this.companyService.findOne({ id });
+    return this.TypeService.findOne({ id });
   }
 
   @Put(":id")
@@ -61,11 +61,19 @@ export class ProductTypeController {
       const fileurl = await uploadFile(images.path);
       updateProductType.image = fileurl.toString();
     }
-    return this.companyService.update({ id }, updateProductType);
+    return this.TypeService.update({ id }, updateProductType);
   }
 
   @Delete(":id")
   async remove(@Param() { id }: ByID) {
-    return this.companyService.remove({ id });
+    return this.TypeService.remove({ id });
+  }
+
+  @Post("/check/:code")
+  async checkCode(
+    @Param() { code }: CodeParam,
+    @Body() updateDrugProduct: UpdateProductTypeDto,
+  ) {
+    return this.TypeService.checkCode({ code });
   }
 }

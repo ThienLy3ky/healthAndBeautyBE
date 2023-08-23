@@ -17,7 +17,7 @@ import {
 } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { ByID, PaginationRes } from "src/interface/dto";
+import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 
 @Controller("style-product")
 @ApiBearerAuth()
@@ -50,5 +50,10 @@ export class StyleProductController {
   @Delete(":id")
   async remove(@Param() { id }: ByID) {
     return this.StyleService.remove({ id });
+  }
+
+  @Get(":code")
+  async checkCode(@Param() { code }: CodeParam) {
+    return this.checkCode({ code });
   }
 }

@@ -3,7 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { StyleProduct } from "src/entities/types/style.entity";
 import { GetAll } from "./dto/dto";
-import { ByID, PaginationRes } from "src/interface/dto";
+import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import { FindAll, FindAllPagination, checkExit } from "src/utils";
 
 @Injectable()
@@ -70,5 +70,12 @@ export class StyleProductService {
 
   async remove({ id }: ByID): Promise<StyleProduct> {
     return this.productStyleModel.findByIdAndDelete(id);
+  }
+  async checkCode({ code }: CodeParam): Promise<boolean> {
+    return (await checkExit(this.productStyleModel, {
+      code: code,
+    }))
+      ? true
+      : false;
   }
 }

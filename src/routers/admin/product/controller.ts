@@ -15,43 +15,36 @@ import { DrugProduct } from "src/entities/types/product.entity";
 import { CreateDrugProductDto, GetAll, UpdateDrugProductDto } from "./dto/dto";
 import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { FilesInterceptor } from "@nestjs/platform-express";
-import { uploadFile } from "src/firebase";
 import { imageOptions } from "src/utils";
-import { ByID, PaginationRes } from "src/interface/dto";
+import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
+import { deleteFile } from "src/firebase";
 
 @Controller("product")
 @ApiBearerAuth()
 @ApiTags("product")
 export class DrugProductController {
-  constructor(private readonly companyService: DrugProductService) {}
+  constructor(private readonly productService: DrugProductService) {}
 
   @Post("/upload")
   @ApiConsumes("multipart/form-data")
   @UseInterceptors(FilesInterceptor("images", 5, imageOptions))
   async uploadPr(@UploadedFiles() images: Express.Multer.File[]) {
-    console.log(
-      "🚀 ~ file: controller.ts:32 ~ DrugProductController ~ uploadPr ~ images:",
-      images,
-    );
-
-    // if (images.length > 0) {
-    //   return await uploadFile(images[0].path);
-    // }
+    return this.productService.Upload(images);
   }
 
   @Post()
   async create(@Body() createDrugProduct: CreateDrugProductDto) {
-    return this.companyService.create(createDrugProduct);
+    return this.productService.create(createDrugProduct);
   }
 
   @Get()
   async findAll(@Query() query: GetAll): Promise<PaginationRes<DrugProduct>> {
-    return this.companyService.findAll(query);
+    return this.productService.findAll(query);
   }
 
   @Get(":id")
   async findOne(@Param() { id }: ByID): Promise<DrugProduct> {
-    return this.companyService.findOne({ id });
+    return this.productService.findOne({ id });
   }
 
   @Put(":id")
@@ -59,11 +52,24 @@ export class DrugProductController {
     @Param() { id }: ByID,
     @Body() updateDrugProduct: UpdateDrugProductDto,
   ) {
-    return this.companyService.update({ id }, updateDrugProduct);
+    return this.productService.update({ id }, updateDrugProduct);
   }
 
   @Delete(":id")
   async remove(@Param() { id }: ByID) {
-    return this.companyService.remove({ id });
+    return this.productService.remove({ id });
+  }
+
+  @Post("/check/:code")
+  async checkCode(
+    @Param() { code }: CodeParam,
+    @Body() updateDrugProduct: UpdateDrugProductDto,
+  ) {
+    return this.productService.checkCode({ code });
+  }
+
+  @Post("/deletedFile")
+  async delete(@Body() file: string[]) {
+    return deleteFile(file);
   }
 }

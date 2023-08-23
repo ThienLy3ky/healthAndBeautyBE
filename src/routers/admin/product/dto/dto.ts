@@ -82,9 +82,6 @@ export class UpdateDrugProductDto {
   description: string;
 
   @ApiProperty()
-  code: string;
-
-  @ApiProperty()
   summary: string;
 
   @ApiProperty()

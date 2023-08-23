@@ -8,7 +8,6 @@ import { DrugProductController } from "./controller";
 import { DrugProductService } from "./service";
 import { MulterModule } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
-import { getNameFile, makeid } from "src/utils";
 
 @Module({
   imports: [
@@ -19,8 +18,6 @@ import { getNameFile, makeid } from "src/utils";
       storage: diskStorage({
         destination: "./uploads",
         filename: (req, file, cb) => {
-          console.log("🚀 ~ file: module.ts:22 ~ file:", file);
-          const date = new Date();
           return cb(null, file.originalname);
         },
       }),

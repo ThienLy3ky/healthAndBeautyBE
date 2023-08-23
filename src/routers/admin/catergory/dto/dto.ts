@@ -43,9 +43,5 @@ export class UpdateCategoryDto {
   image: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  code: string;
-
-  @ApiProperty()
   description: string;
 }

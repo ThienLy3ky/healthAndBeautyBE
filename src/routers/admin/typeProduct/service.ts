@@ -3,7 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { ProductType } from "src/entities/types/type.entity";
 import { CreateProductTypeDto, GetAll, UpdateProductTypeDto } from "./dto/dto";
-import { ByID, PaginationRes } from "src/interface/dto";
+import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import { FindAll, FindAllPagination, checkExit } from "src/utils";
 import { BadRequestException } from "@nestjs/common/exceptions";
 
@@ -55,15 +55,10 @@ export class ProductTypeService {
     { id }: ByID,
     payload: UpdateProductTypeDto,
   ): Promise<ProductType> {
-    const { code } = payload;
     const isExit = await checkExit(this.productTypeModel, {
       _id: id,
     });
-    const checkCode = await checkExit(this.productTypeModel, {
-      _id: { $ne: id },
-      code: code,
-    });
-    if (!isExit || checkCode) throw new BadRequestException("data wrong");
+    if (!isExit) throw new BadRequestException("data wrong");
     return this.productTypeModel.findByIdAndUpdate(id, payload, {
       new: true,
     });
@@ -71,5 +66,12 @@ export class ProductTypeService {
 
   async remove({ id }: ByID): Promise<ProductType> {
     return this.productTypeModel.findByIdAndDelete(id);
+  }
+  async checkCode({ code }: CodeParam): Promise<boolean> {
+    return (await checkExit(this.productTypeModel, {
+      code: code,
+    }))
+      ? true
+      : false;
   }
 }
