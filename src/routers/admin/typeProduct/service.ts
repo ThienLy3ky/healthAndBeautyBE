@@ -6,6 +6,7 @@ import { CreateProductTypeDto, GetAll, UpdateProductTypeDto } from "./dto/dto";
 import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import { FindAll, FindAllPagination, checkExit } from "src/utils";
 import { BadRequestException } from "@nestjs/common/exceptions";
+import { deleteFile } from "src/firebase";
 
 @Injectable()
 export class ProductTypeService {
@@ -65,6 +66,11 @@ export class ProductTypeService {
   }
 
   async remove({ id }: ByID): Promise<ProductType> {
+    const isExit = await checkExit(this.productTypeModel, {
+      _id: id,
+    });
+    if (!isExit) throw new BadRequestException("data wrong");
+    if (isExit.image && isExit.image != "") deleteFile(isExit.image);
     return this.productTypeModel.findByIdAndDelete(id);
   }
   async checkCode({ code }: CodeParam): Promise<boolean> {

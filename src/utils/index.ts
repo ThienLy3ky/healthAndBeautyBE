@@ -179,3 +179,8 @@ export const makeid = (length: number) => {
   }
   return result;
 };
+export const getNameImage = (link: string) => {
+  const data = link.split("/");
+  const names = data[data.length - 1].split(".jpeg")[0];
+  return names.split("_")[names.split("_").length - 1] + ".jpeg";
+};

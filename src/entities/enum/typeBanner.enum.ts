@@ -1,4 +1,4 @@
 export enum BannnerType {
-  pannerProduct = 1,
+  pannerCode = 1,
   pannnerSale = 2,
 }
