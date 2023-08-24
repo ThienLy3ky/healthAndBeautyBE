@@ -20,7 +20,7 @@ export class Account extends Document {
   Zalo: string;
 
   @Prop({ type: String, unique: true })
-  gmail: string;
+  email: string;
 
   @Prop({ required: true, default: false })
   isActive: boolean;

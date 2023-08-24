@@ -2,18 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, ObjectId } from "mongoose";
 import { Admin } from "src/entities/types/admin.entity";
-import { Account } from "src/entities/types/user.entity";
-
-// This should be a real class/interface representing a user entity
-export type User = any;
 
 @Injectable()
-export class UsersService {
-  constructor(
-    @InjectModel(Account.name) private readonly user: Model<Account>,
-  ) {}
-  async findByEmail(email: string): Promise<Account> {
-    return this.user.findOne({
+export class AdminsService {
+  constructor(@InjectModel(Admin.name) private readonly Admin: Model<Admin>) {}
+
+  async findByEmail(email: string): Promise<Admin> {
+    return this.Admin.findOne({
       where: {
         email,
       },
@@ -27,7 +22,7 @@ export class UsersService {
     email: string;
     password_hash: string;
   }): Promise<Admin> {
-    const entity = this.user.create({
+    const entity = this.Admin.create({
       email,
       password_hash,
     });
@@ -35,6 +30,6 @@ export class UsersService {
   }
 
   async findOne(id: ObjectId): Promise<Admin> {
-    return this.user.findById(id);
+    return this.Admin.findById(id);
   }
 }
