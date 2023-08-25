@@ -11,7 +11,7 @@ export class Account extends Document {
   sdt: string;
 
   @Prop({ type: String, required: true, minlength: 8 })
-  password: string;
+  password_hash: string;
 
   @Prop({ type: String, unique: true })
   FB: string;
@@ -25,6 +25,8 @@ export class Account extends Document {
   @Prop({ required: true, default: false })
   isActive: boolean;
 
+  @Prop({ required: false, default: false })
+  refreshToken: string;
   @Prop({
     type: Mongoose.Schema.ObjectId,
     ref: "account-admin",

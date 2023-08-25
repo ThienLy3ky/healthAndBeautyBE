@@ -7,6 +7,8 @@ import { AuthService } from "./auth.service";
 import { Module } from "@nestjs/common";
 import { PassportModule } from "@nestjs/passport/dist";
 import { AdminsModule } from "src/routers/admins/admins.module";
+import { JwtStrategy } from "./strategy/jwt.strategy";
+import { RefreshTokenStrategy } from "./strategy/refresh-jwt.strategy";
 
 @Module({
   imports: [
@@ -17,12 +19,9 @@ import { AdminsModule } from "src/routers/admins/admins.module";
       property: "user",
       session: false,
     }),
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: "60m" },
-    }),
+    JwtModule,
   ],
-  providers: [AuthService, LocalStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })

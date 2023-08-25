@@ -12,6 +12,8 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 import { LoginBodyDTO } from "./dto/login.dto";
+import { ApiBearerAuth } from "@nestjs/swagger";
+import { RefreshTokenGuard } from "./guard/refresh-jwt.guard";
 
 @Controller()
 export class AuthController {
@@ -19,16 +21,22 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post("auth/login")
-  async login(@Body() req: LoginBodyDTO) {
-    console.log(
-      "🚀 ~ file: auth.controller.ts:20 ~ AuthController ~ login ~ req:",
-      req,
-    );
-    return this.authService.login(req);
+  async login(@Request() req, @Body() body: LoginBodyDTO) {
+    return this.authService.login(req.user);
   }
+
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get("profile")
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Get("refresh")
+  refreshTokens(@Request() req: Request) {
+    // const userId = req.user["sub"];
+    // const refreshToken = req.user["refreshToken"];
+    // return this.authService.refreshTokens(userId, refreshToken);
   }
 }
