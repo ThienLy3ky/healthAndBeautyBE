@@ -30,4 +30,7 @@ export class AdminsService {
   async findOne(id: ObjectId): Promise<Admin> {
     return this.Admin.findById(id);
   }
+  async updateToken(id: ObjectId, refreshToken: string): Promise<Admin> {
+    return this.Admin.findByIdAndUpdate(id, { refreshToken });
+  }
 }

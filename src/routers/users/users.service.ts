@@ -37,4 +37,8 @@ export class UsersService {
   async findOne(id: ObjectId): Promise<Admin> {
     return this.user.findById(id);
   }
+
+  async updateToken(id: ObjectId, refreshToken: string): Promise<Admin> {
+    return this.user.findByIdAndUpdate(id, { refreshToken });
+  }
 }

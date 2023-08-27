@@ -36,7 +36,7 @@ export class CreateBannerDto {
   type: BannnerType;
 
   @ApiProperty({ type: Schema.Types.ObjectId })
-  product: Schema.Types.ObjectId;
+  product?: Schema.Types.ObjectId;
 }
 
 export class UpdateBannerDto {
@@ -56,5 +56,5 @@ export class UpdateBannerDto {
   type: BannnerType;
 
   @ApiProperty({ type: Schema.Types.ObjectId })
-  product: Schema.Types.ObjectId;
+  product?: Schema.Types.ObjectId;
 }

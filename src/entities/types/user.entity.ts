@@ -7,19 +7,19 @@ export class Account extends Document {
   @Prop({ type: String, required: true })
   username: string;
 
-  @Prop({ type: String, unique: true })
+  @Prop({ type: String })
   sdt: string;
 
   @Prop({ type: String, required: true, minlength: 8 })
   password_hash: string;
 
-  @Prop({ type: String, unique: true })
+  @Prop({ type: String })
   FB: string;
 
-  @Prop({ type: String, unique: true })
+  @Prop({ type: String })
   Zalo: string;
 
-  @Prop({ type: String, unique: true })
+  @Prop({ type: String })
   email: string;
 
   @Prop({ required: true, default: false })

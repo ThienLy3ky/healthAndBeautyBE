@@ -5,14 +5,13 @@ import { BannnerType } from "../enum/typeBanner.enum";
 
 @Schema({ collection: "banner", timestamps: true })
 export class Banner extends Document {
-  @Prop({ type: String, unique: true })
+  @Prop({ type: String })
   image: string;
 
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "DrugProduct" })
   product: DrugProduct;
 
   @Prop({
-    type: Number,
     enum: BannnerType,
     required: true,
   })

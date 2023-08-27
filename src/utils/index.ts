@@ -85,6 +85,20 @@ export async function populatedAllPagination(
   const total = await schema.countDocuments(where).exec();
   return { items, total };
 }
+export async function populatedOnePagination(
+  schema,
+  id,
+  arrPopulate: populateArr,
+  objPopulate: populateOp,
+) {
+  const items = await schema
+    .findById(id)
+    .populate(arrPopulate)
+    .populate(objPopulate)
+    .lean()
+    .exec();
+  return items;
+}
 export function removeVietnameseTones(str: any) {
   str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
   str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");

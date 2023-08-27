@@ -7,13 +7,18 @@ import {
   Post,
   Query,
   Put,
+  UseInterceptors,
+  UploadedFile,
 } from "@nestjs/common";
 import { BannerService } from "./service";
 import { Banner } from "src/entities/types/banner.entity";
 import { CreateBannerDto, GetAll, UpdateBannerDto } from "./dto/dto";
 
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { ByID } from "src/interface/dto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { imageOptions } from "src/utils";
+import { uploadFile } from "src/firebase";
 
 @Controller("banner")
 @ApiBearerAuth()
@@ -21,7 +26,16 @@ import { ByID } from "src/interface/dto";
 export class BannerController {
   constructor(private readonly companyService: BannerService) {}
   @Post()
-  async create(@Body() createBanner: CreateBannerDto) {
+  @ApiConsumes("multipart/form-data")
+  @UseInterceptors(FileInterceptor("images", imageOptions))
+  async create(
+    @Body() createBanner: CreateBannerDto,
+    @UploadedFile() images: Express.Multer.File,
+  ) {
+    if (images) {
+      const fileurl = await uploadFile(images.path);
+      createBanner.image = fileurl.toString();
+    }
     return this.companyService.create(createBanner);
   }
 

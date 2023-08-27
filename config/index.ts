@@ -7,8 +7,9 @@ interface iConfig {
   keys: {
     privateKey: string;
     publicKey: string;
-    aes256Secret: string;
+    jwt_secret: string;
     consumerKey: string;
+    refresh_secrest: string;
   };
   useEncrypt: boolean;
 }
@@ -24,7 +25,8 @@ export default (): iConfig => ({
   keys: {
     privateKey: process.env.PRIVATE_KEY,
     publicKey: process.env.PUBLICKEY,
-    aes256Secret: process.env.SECRET,
+    jwt_secret: process.env.JWT_SECRET,
+    refresh_secrest: process.env.JWT_REFRESH_SECRET,
     consumerKey: process.env.CONSUMER_KEY,
   },
   useEncrypt: process.env.ENCRYPT ? true : false,
