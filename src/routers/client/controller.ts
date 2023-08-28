@@ -33,7 +33,10 @@ export class ClientController {
   async findDetail(@Param() { id }: ByID): Promise<DrugProduct> {
     return this.clientService.findDetail({ id });
   }
-
+  @Post()
+  async payment(@Body() payload: any) {
+    return;
+  }
   // @Get(":id")
   // async update(
   //   @Param() { id }: ByID,

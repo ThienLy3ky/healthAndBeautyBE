@@ -8,44 +8,31 @@ class CreateDrugProductSchema {
   size: Schema.Types.ObjectId;
 
   @ApiProperty({ type: Number })
-  priceOlder: string;
+  productid: string;
 
   @ApiProperty({ type: Number })
-  priceNew: string;
+  price: string;
 
   @ApiProperty({ type: Schema.Types.ObjectId })
   species: Schema.Types.ObjectId;
 
   @ApiProperty({ type: Schema.Types.ObjectId })
   group: Schema.Types.ObjectId;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  image: string;
 }
-export class GetAll extends Pagination {
-  @ApiProperty({ required: false })
-  key?: string;
 
-  @ApiProperty({ required: false })
-  order?: "asc" | "desc";
-
-  @ApiProperty({ required: false })
-  orderBy?: string;
-}
 export class CreateDrugProductDto {
   @ApiProperty()
   @IsNotEmpty()
-  name: string;
+  iduser: string;
 
   @ApiProperty()
-  description: string;
+  adress: string;
 
   @ApiProperty()
-  code: string;
+  phone: string;
 
   @ApiProperty()
-  summary: string;
+  sumprice: string;
 
   @ApiProperty({
     isArray: true,

@@ -24,17 +24,6 @@ class product {
   quantity: number;
 
   @Prop({
-    type: String, // image is required
-    // match: /^https?:\/\/.+/, // image must be a valid URL
-  })
-  image: string;
-  @Prop({
-    type: Number,
-    required: true,
-  })
-  quanlity: number;
-
-  @Prop({
     type: Number,
     required: true,
   })
