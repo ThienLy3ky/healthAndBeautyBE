@@ -4,8 +4,8 @@ import {
   DrugProduct,
   DrugProductSchema,
 } from "src/entities/types/product.entity";
-import { DrugProductController } from "./controller";
-import { DrugProductService } from "./service";
+import { ClientController } from "./controller";
+import { ClientService } from "./service";
 import { MulterModule } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 
@@ -23,7 +23,7 @@ import { diskStorage } from "multer";
       }),
     }),
   ],
-  controllers: [DrugProductController],
-  providers: [DrugProductService],
+  controllers: [ClientController],
+  providers: [ClientService],
 })
 export class DrugProductModule {}
