@@ -18,7 +18,7 @@ export default (): iConfig => ({
   port: parseInt(process.env.PORT, 10) || 3000,
   database:
     process.env.STRING_DB === ""
-      ? `mongodb://${process.env.USER_DB}:${process.env.PASSWORD_DB}@${process.env.HOST_DB}/${process.env.NAME_DB}?${process.env.METHOD_DB}`
+      ? `mongodb://${process.env.USER_DB}:${process.env.PASSWORD_DB}@${process.env.HOST_DB}:${process.env.PORT_DB}/${process.env.NAME_DB}?${process.env.METHOD_DB}`
       : process.env.STRING_DB,
   appPrefix: process.env.PREFIX,
   swaggerPrefix: process.env.SWAGGER_API,

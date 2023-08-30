@@ -33,7 +33,15 @@ import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
-    MongooseModule.forRoot("mongodb://localhost:27017/admin"),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => ({
+        uri: config.get("database"),
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }),
+      inject: [ConfigService],
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [config],
