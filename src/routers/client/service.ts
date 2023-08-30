@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { DrugProduct } from "src/entities/types/product.entity";
-import { CreateDrugProductDto, GetAll, UpdateDrugProductDto } from "./dto/dto";
+import { CreateDrugProductDto, UpdateDrugProductDto } from "./dto/dto";
 import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import {
   checkExit,

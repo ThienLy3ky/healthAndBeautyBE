@@ -1,4 +1,3 @@
-import { jwtConstants } from "./../constants/constants";
 import { AuthService } from "./../auth.service";
 import { Strategy } from "passport-local";
 import { PassportStrategy } from "@nestjs/passport";

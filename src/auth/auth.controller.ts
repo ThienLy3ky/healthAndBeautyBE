@@ -14,13 +14,14 @@ import {
 import { LoginBodyDTO } from "./dto/login.dto";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { RefreshTokenGuard } from "./guard/refresh-jwt.guard";
+import { RegisterBodyDTO } from "./dto/register.dto";
 
-@Controller()
+@Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
-  @Post("auth/login")
+  @Post("login")
   async login(@Request() req, @Body() body: LoginBodyDTO) {
     return this.authService.login(req.user);
   }
@@ -38,5 +39,10 @@ export class AuthController {
     // const userId = req.user["sub"];
     // const refreshToken = req.user["refreshToken"];
     // return this.authService.refreshTokens(userId, refreshToken);
+  }
+
+  @Post("admin")
+  createAdmin(@Body() payload: RegisterBodyDTO) {
+    return this.authService.createAdmin(payload);
   }
 }

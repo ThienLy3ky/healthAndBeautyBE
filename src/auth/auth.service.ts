@@ -6,6 +6,7 @@ import { AdminsService } from "src/routers/admins/admins.service";
 import { LoginBodyDTO } from "./dto/login.dto";
 import { hashSync, compareSync } from "bcrypt";
 import { ObjectId } from "mongoose";
+import { RegisterBodyDTO } from "./dto/register.dto";
 
 @Injectable()
 export class AuthService {
@@ -18,12 +19,14 @@ export class AuthService {
 
   async validateUser({ email, password }): Promise<any> {
     const admin = await this.AdminService.findByEmail(email);
-    if (admin && admin.password_hash === password) {
+    const password_hash_admin = compareSync(password, admin.password_hash);
+    if (admin && password_hash_admin) {
       const { email, isActive, _id } = admin;
       return { role: "admin", email, isActive, _id };
     }
     const user = await this.usersService.findByEmail(email);
-    if (user && user.password_hash === password) {
+    const password_hash_user = compareSync(password, admin.password_hash);
+    if (user && password_hash_user) {
       const { email, isActive, _id } = user;
       return { role: "admin", email, isActive, _id };
     }
@@ -33,7 +36,6 @@ export class AuthService {
     const payload = { username: user.email, sub: user.role };
     const tokens = await this.getTokens(payload);
     await this.updateRefreshToken(user._id, tokens.refreshToken, user.role);
-    return tokens;
     return {
       access_token: tokens,
       role: user.role,
@@ -78,12 +80,12 @@ export class AuthService {
     this.usersService.updateToken(userId, hashedRefreshToken);
   }
 
-  async logout(userId: ObjectId,role:string) {
-     if (role === "admin") {
-       this.AdminService.updateToken(userId, null);
-       return;
-     }
-     return this.usersService.updateToken(userId, null);
+  async logout(userId: ObjectId, role: string) {
+    if (role === "admin") {
+      this.AdminService.updateToken(userId, null);
+      return;
+    }
+    return this.usersService.updateToken(userId, null);
   }
 
   hashData(data: string) {
@@ -104,5 +106,9 @@ export class AuthService {
       password_hash: hash,
     });
     return;
+  }
+  async createAdmin({ email, password }: RegisterBodyDTO) {
+    const password_hash = this.hashData(password);
+    return this.AdminService.create({ email, password_hash });
   }
 }
