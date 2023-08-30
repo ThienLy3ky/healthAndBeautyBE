@@ -7,10 +7,10 @@ import { DrugProduct } from "./product.entity";
 export class Sale extends Document {
   @Prop({
     type: Mongoose.Schema.ObjectId,
-    ref: "products",
+    ref: "DrugProduct",
     required: true, // image is required
   })
-  productId: DrugProduct[];
+  productId: DrugProduct;
 
   @Prop({
     type: Number,

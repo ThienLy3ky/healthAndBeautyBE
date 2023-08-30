@@ -18,6 +18,18 @@ export class Banner extends Document {
   type: BannnerType;
 
   @Prop({
+    type: Number,
+    required: true,
+  })
+  quanlity: number;
+
+  @Prop({
+    type: Number,
+    required: true,
+  })
+  price: number;
+
+  @Prop({
     type: String,
     required: true,
   })

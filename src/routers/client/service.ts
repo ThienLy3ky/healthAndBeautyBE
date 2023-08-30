@@ -1,3 +1,4 @@
+import { Banner } from "src/entities/types/banner.entity";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
@@ -17,6 +18,7 @@ export class ClientService {
   constructor(
     @InjectModel(DrugProduct.name)
     private readonly productModel: Model<DrugProduct>,
+    private readonly Banner: Model<Banner>,
   ) {}
 
   async create(
@@ -28,6 +30,29 @@ export class ClientService {
 
   async findHome(): Promise<DrugProduct[]> {
     const field = { _id: 1, name: 1 };
+    const populatSale = {
+      path: "product",
+      populate: {
+        path: "price",
+        populate: [
+          {
+            path: "size",
+            model: "ProductSize",
+            select: field,
+          },
+          {
+            path: "group",
+            model: "GroupProduct",
+            select: field,
+          },
+          {
+            path: "style",
+            model: "StyleProduct",
+            select: field,
+          },
+        ],
+      },
+    };
     const populateArr = {
         path: "price",
         populate: [
@@ -52,15 +77,22 @@ export class ClientService {
         path: "company type categories",
         select: field,
       };
-    const { items, total } = await populatedAllPagination(
+    const { items: newProduct } = await populatedAllPagination(
       this.productModel,
       {},
       { limit: 20, page: 1, order: "createAt", orderBy: "desc" },
       populateArr,
       populateObj,
     );
+    const { items: saleProduct } = await populatedAllPagination(
+      this.Banner,
+      {},
+      { limit: 20, page: 1, order: "createAt", orderBy: "desc" },
+      populateArr,
+      populateObj,
+    );
     return;
-    items;
+    newProduct;
   }
 
   async findDetail({ id }: ByID): Promise<DrugProduct> {
