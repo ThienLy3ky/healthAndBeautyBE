@@ -4,13 +4,12 @@ import {
   Delete,
   Get,
   Param,
-  Post,
   Query,
   Put,
 } from "@nestjs/common";
 import { BillService } from "./service";
 import { Bill } from "src/entities/types/bill.entity";
-import { CreateBillDto, GetAll, UpdateBillDto } from "./dto/dto";
+import { GetAll, UpdateBillDto } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ByID } from "src/interface/dto";
@@ -20,10 +19,6 @@ import { ByID } from "src/interface/dto";
 @ApiTags("Bill")
 export class BillController {
   constructor(private readonly companyService: BillService) {}
-  @Post()
-  async create(@Body() createBill: CreateBillDto) {
-    return this.companyService.create(createBill);
-  }
 
   @Get()
   async findAll(@Query() query: GetAll): Promise<Bill[]> {

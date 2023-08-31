@@ -17,7 +17,7 @@ export class CodeSale extends Document {
     ref: "products",
     required: true, // image is required
   })
-  productId: DrugProduct[];
+  productId: DrugProduct;
 
   @Prop({
     type: Date,

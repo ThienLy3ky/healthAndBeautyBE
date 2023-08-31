@@ -21,5 +21,8 @@ import { getNameFile } from "src/utils";
   ],
   controllers: [BannerController],
   providers: [BannerService],
+  exports: [
+    MongooseModule.forFeature([{ name: Banner.name, schema: BannerSchema }]),
+  ],
 })
 export class BannerModule {}

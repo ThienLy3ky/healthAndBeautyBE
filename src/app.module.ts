@@ -30,6 +30,7 @@ import { UploadModule } from "./routers/upload/module";
 import { MulterModule } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { AuthModule } from "./auth/auth.module";
+import { ClientModule } from "./routers/client/module";
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { AuthModule } from "./auth/auth.module";
         destination: "./uploads",
       }),
     }),
+    ClientModule,
     AuthModule,
     CompanyModule,
     ProductTypeModule,

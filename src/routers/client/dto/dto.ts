@@ -19,7 +19,34 @@ class CreateDrugProductSchema {
   @ApiProperty({ type: Schema.Types.ObjectId })
   group: Schema.Types.ObjectId;
 }
+export class GetAll extends Pagination {
+  @ApiProperty({ required: false })
+  key?: string;
 
+  @ApiProperty({ required: false })
+  order?: "asc" | "desc";
+
+  @ApiProperty({ required: false })
+  orderBy?: string;
+
+  @ApiProperty({ required: false })
+  categories?: string;
+
+  @ApiProperty({ required: false })
+  type?: string;
+
+  @ApiProperty({ required: false })
+  company?: string;
+
+  @ApiProperty({
+    required: false,
+    isArray: true,
+    maxLength: 2,
+    minLength: 2,
+    type: Number,
+  })
+  price?: [number];
+}
 export class CreateDrugProductDto {
   @ApiProperty()
   @IsNotEmpty()

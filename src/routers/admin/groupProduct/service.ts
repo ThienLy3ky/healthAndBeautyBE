@@ -47,7 +47,7 @@ export class GroupProductService {
       page,
       limit,
       total,
-      totalPages: 1,
+      totalPages: items?.length,
     };
   }
 

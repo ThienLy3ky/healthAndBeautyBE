@@ -10,7 +10,7 @@ export class Sale extends Document {
     ref: "DrugProduct",
     required: true, // image is required
   })
-  productId: DrugProduct;
+  product: DrugProduct;
 
   @Prop({
     type: Number,

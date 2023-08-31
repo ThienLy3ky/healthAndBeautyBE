@@ -1,29 +1,13 @@
 import { Module } from "@nestjs/common";
-import { MongooseModule } from "@nestjs/mongoose";
-import {
-  DrugProduct,
-  DrugProductSchema,
-} from "src/entities/types/product.entity";
 import { ClientController } from "./controller";
 import { ClientService } from "./service";
-import { MulterModule } from "@nestjs/platform-express";
-import { diskStorage } from "multer";
+import { DrugProductModule } from "../admin/product/module";
+import { SaleModule } from "../admin/sale/module";
+import { BannerModule } from "../admin/banner/module";
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: DrugProduct.name, schema: DrugProductSchema },
-    ]),
-    MulterModule.register({
-      storage: diskStorage({
-        destination: "./uploads",
-        filename: (req, file, cb) => {
-          return cb(null, file.originalname);
-        },
-      }),
-    }),
-  ],
+  imports: [DrugProductModule, SaleModule, BannerModule],
   controllers: [ClientController],
   providers: [ClientService],
 })
-export class DrugProductModule {}
+export class ClientModule {}

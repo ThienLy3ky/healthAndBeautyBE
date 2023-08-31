@@ -69,8 +69,8 @@ export async function populatedAllPagination(
   schema,
   where,
   query: Iquery,
-  arrPopulate: populateArr,
-  objPopulate: populateOp,
+  arrPopulate?: populateArr,
+  objPopulate?: populateOp,
 ) {
   const { limit, page, order, orderBy } = query;
   const items = await schema
@@ -93,6 +93,20 @@ export async function populatedOnePagination(
 ) {
   const items = await schema
     .findById(id)
+    .populate(arrPopulate)
+    .populate(objPopulate)
+    .lean()
+    .exec();
+  return items;
+}
+export async function populatedOneNotIdPagination(
+  schema,
+  where,
+  arrPopulate: populateArr,
+  objPopulate: populateOp,
+) {
+  const items = await schema
+    .findOne(where)
     .populate(arrPopulate)
     .populate(objPopulate)
     .lean()

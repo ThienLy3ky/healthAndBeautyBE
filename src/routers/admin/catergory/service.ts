@@ -44,7 +44,7 @@ export class CategoryService {
       page,
       limit,
       total,
-      totalPages: 1,
+      totalPages: items?.length,
     };
   }
 

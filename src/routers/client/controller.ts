@@ -1,38 +1,31 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Query,
-  Put,
-} from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query, Put } from "@nestjs/common";
 import { ClientService } from "./service";
 import { DrugProduct } from "src/entities/types/product.entity";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
+import { GetAll } from "./dto/dto";
 
-@Controller("size-product")
+@Controller("Client")
 @ApiBearerAuth()
-@ApiTags("Size Product")
+@ApiTags("client")
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
-  // @Get()
-  // async getForHome(@Body() createProductSize: CreateProductSizeDto) {
-  //   return this.SizeService.create(createProductSize);
-  // }
+  @Get("search")
+  async getSearch(@Query() query: GetAll) {
+    return this.clientService.getSearch(query);
+  }
 
   @Get()
-  async getForHome(): Promise<DrugProduct[]> {
+  async getForHome() {
     return this.clientService.findHome();
   }
 
-  @Get(":id")
-  async findDetail(@Param() { id }: ByID): Promise<DrugProduct> {
-    return this.clientService.findDetail({ id });
+  @Get(":code")
+  async findDetail(@Param() { code }: CodeParam): Promise<DrugProduct> {
+    return this.clientService.findDetail({ code });
   }
+
   @Post()
   async payment(@Body() payload: any) {
     return;

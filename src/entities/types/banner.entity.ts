@@ -19,13 +19,11 @@ export class Banner extends Document {
 
   @Prop({
     type: Number,
-    required: true,
   })
   quanlity: number;
 
   @Prop({
     type: Number,
-    required: true,
   })
   price: number;
 
@@ -40,6 +38,11 @@ export class Banner extends Document {
     required: true,
   })
   title: string;
+
+  @Prop({
+    type: String,
+  })
+  status: string;
 }
 
 export const BannerSchema = SchemaFactory.createForClass(Banner);

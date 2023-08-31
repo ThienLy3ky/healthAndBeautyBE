@@ -10,5 +10,8 @@ import { SaleService } from "./service";
   ],
   controllers: [SaleController],
   providers: [SaleService],
+  exports: [
+    MongooseModule.forFeature([{ name: Sale.name, schema: SaleSchema }]),
+  ],
 })
 export class SaleModule {}

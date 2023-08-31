@@ -25,5 +25,10 @@ import { diskStorage } from "multer";
   ],
   controllers: [DrugProductController],
   providers: [DrugProductService],
+  exports: [
+    MongooseModule.forFeature([
+      { name: DrugProduct.name, schema: DrugProductSchema },
+    ]),
+  ],
 })
 export class DrugProductModule {}
