@@ -1,9 +1,8 @@
-import { Body, Controller, Get, Param, Post, Query, Put } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 import { ClientService } from "./service";
-import { DrugProduct } from "src/entities/types/product.entity";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
+import { CodeParam } from "src/interface/dto";
 import { GetAll } from "./dto/dto";
 
 @Controller("Client")
@@ -22,7 +21,7 @@ export class ClientController {
   }
 
   @Get(":code")
-  async findDetail(@Param() { code }: CodeParam): Promise<DrugProduct> {
+  async findDetail(@Param() { code }: CodeParam) {
     return this.clientService.findDetail({ code });
   }
 

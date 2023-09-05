@@ -33,7 +33,10 @@ export class AuthService {
     return null;
   }
   async login(user: any) {
-    const payload = { username: user.email, sub: user.role };
+    const payload = {
+      username: user.email,
+      sub: { role: "admin", user: user.email },
+    };
     const tokens = await this.getTokens(payload);
     await this.updateRefreshToken(user._id, tokens.refreshToken, user.role);
     return {
@@ -110,5 +113,9 @@ export class AuthService {
   async createAdmin({ email, password }: RegisterBodyDTO) {
     const password_hash = this.hashData(password);
     return this.AdminService.create({ email, password_hash });
+  }
+
+  async getProfile(data: any) {
+    return await this.usersService.getProfile(data.user);
   }
 }

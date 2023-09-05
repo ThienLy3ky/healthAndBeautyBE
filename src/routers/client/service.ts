@@ -88,31 +88,32 @@ export class ClientService {
     const { items: newProduct } = await populatedAllPagination(
       this.productModel,
       {},
-      { limit: 20, page: 1, orderBy: "createdAt", order: "desc" },
+      { limit: 30, page: 1, orderBy: "createdAt", order: "desc" },
       populateArr,
       populateObj,
     );
-    const { items: saleProduct } = await populatedAllPagination(
+    const { items: flashProduct } = await populatedAllPagination(
       this.Sale,
       {},
-      { limit: 20, page: 1, orderBy: "createdAt", order: "desc" },
+      { limit: 30, page: 1, orderBy: "createdAt", order: "desc" },
       populatSale,
     );
     const [bannerText, bannerImage] = await Promise.all([
-      this.Banner.find({ image: undefined }).limit(20).lean(),
+      this.Banner.find({ image: undefined }).limit(30).lean(),
       this.Banner.find({ image: { $ne: undefined } })
-        .limit(20)
+        .limit(30)
         .lean(),
     ]);
     return {
       newProduct,
-      saleProduct,
+      flashProduct,
+      saleProduct: [],
       bannerText,
       bannerImage,
     };
   }
 
-  async findDetail({ code }: CodeParam): Promise<DrugProduct> {
+  async findDetail({ code }: CodeParam) {
     const field = { _id: 1, name: 1 };
     const populateArr = {
         path: "price",
@@ -138,12 +139,26 @@ export class ClientService {
         path: "company type categories",
         select: field,
       };
-    return populatedOneNotIdPagination(
+    const data = await populatedOneNotIdPagination(
       this.productModel,
       { code },
       populateArr,
       populateObj,
     );
+    const { items } = await populatedAllPagination(
+      this.productModel,
+      {
+        $or: [
+          { categories: data.categories },
+          { type: data.type },
+          { company: data.company },
+        ],
+      },
+      { limit: 30, page: 1, orderBy: "createdAt", order: "desc" },
+      populateArr,
+      populateObj,
+    );
+    return { data, items };
   }
 
   async getSearch(query: GetAll): Promise<PaginationRes<DrugProduct>> {
