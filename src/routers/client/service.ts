@@ -8,6 +8,7 @@ import {
   checkExit,
   populatedAllPagination,
   populatedOneNotIdPagination,
+  populatedSearchAllPagination,
 } from "src/utils";
 import { Sale } from "src/entities/types/sale.entity";
 import { Banner } from "src/entities/types/banner.entity";
@@ -185,16 +186,27 @@ export class ClientService {
           },
         ],
       },
-      populateObj = {
-        path: "company type categories",
-        select: field,
-      };
+      populateObj = [
+        {
+          path: "company",
+          select: field,
+        },
+        {
+          path: "type",
+          select: field,
+        },
+        ,
+        {
+          path: "categories",
+          select: field,
+        },
+      ];
     let where: any = {};
     if (key) where.name = { name: { $regex: key, $options: "i" } };
-    if (company) where = { ...where, company };
-    if (type) where = { ...where, type };
-    if (categories) where = { ...where, categories };
-    const { items, total } = await populatedAllPagination(
+    if (company) where = { ...where, company: { $in: company } };
+    if (type) where = { ...where, type: { $in: type } };
+    if (categories) where = { ...where, categories: { $in: categories } };
+    const { items, total } = await populatedSearchAllPagination(
       this.productModel,
       where,
       { limit, page, order, orderBy },

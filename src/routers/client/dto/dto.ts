@@ -4,8 +4,8 @@ import { Pagination } from "src/interface/dto";
 import { Schema } from "mongoose";
 
 class CreateDrugProductSchema {
-  @ApiProperty({ type: Schema.Types.ObjectId })
-  size: Schema.Types.ObjectId;
+  @ApiProperty({ type: [String] })
+  size: string[];
 
   @ApiProperty({ type: Number })
   productid: string;
@@ -13,11 +13,11 @@ class CreateDrugProductSchema {
   @ApiProperty({ type: Number })
   price: string;
 
-  @ApiProperty({ type: Schema.Types.ObjectId })
-  species: Schema.Types.ObjectId;
+  @ApiProperty({ type: [String] })
+  species: string[];
 
-  @ApiProperty({ type: Schema.Types.ObjectId })
-  group: Schema.Types.ObjectId;
+  @ApiProperty({ type: [String] })
+  group: string[];
 }
 export class GetAll extends Pagination {
   @ApiProperty({ required: false })
@@ -77,14 +77,14 @@ export class CreateDrugProductDto {
   @ApiProperty({ type: Number })
   quantity: number;
 
-  @ApiProperty({ type: Schema.Types.ObjectId })
-  company: Schema.Types.ObjectId;
+  @ApiProperty({ type: [String] })
+  company: [string];
 
-  @ApiProperty({ type: Schema.Types.ObjectId })
-  type: Schema.Types.ObjectId;
+  @ApiProperty({ type: [String] })
+  type: [string];
 
-  @ApiProperty({ type: Schema.Types.ObjectId })
-  categories: Schema.Types.ObjectId;
+  @ApiProperty({ type: [String] })
+  categories: [string];
 }
 
 export class UpdateDrugProductDto {

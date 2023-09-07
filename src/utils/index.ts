@@ -85,6 +85,27 @@ export async function populatedAllPagination(
   const total = await schema.countDocuments(where).exec();
   return { items, total };
 }
+
+export async function populatedSearchAllPagination(
+  schema,
+  where,
+  query: Iquery,
+  arrPopulate?: populateArr,
+  objPopulate?: populateOp[],
+) {
+  const { limit, page, order, orderBy } = query;
+  const items = await schema
+    .find(where)
+    .populate(arrPopulate)
+    .populate(objPopulate)
+    .sort({ [orderBy]: order })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean()
+    .exec();
+  const total = await schema.countDocuments(where).exec();
+  return { items, total };
+}
 export async function populatedOnePagination(
   schema,
   id,

@@ -32,7 +32,7 @@ export class AppService {
   }
 
   async getTemplate() {
-    const [types, categories, setting] = await Promise.all([
+    const [types, categories, setting, companies] = await Promise.all([
       this.productTypeModel
         .find({}, { _id: 1, name: 1, code: 1, image: 1 })
         .lean(),
@@ -41,17 +41,17 @@ export class AppService {
         .find({}, { _id: 1, name: 1, code: 1, image: 1 })
         .lean(),
       this.settingModel.findOne().lean(),
+      this.CompanyModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
     ]);
-    return { types, categories, setting };
+    return { types, categories, setting, companies };
   }
   async getGroupPrice() {
-    const [groups, sizes, styles, companies] = await Promise.all([
+    const [groups, sizes, styles] = await Promise.all([
       this.productGroupModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
       this.productSizeModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
       this.productStyleModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
-      this.CompanyModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
       // this.settingModel.findOne().lean(),
     ]);
-    return { groups, sizes, styles, companies };
+    return { groups, sizes, styles };
   }
 }
