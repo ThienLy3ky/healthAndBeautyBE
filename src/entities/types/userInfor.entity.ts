@@ -26,16 +26,16 @@ export class Information extends Document {
   @Prop({ type: String, required: true })
   name: string;
 
-  @Prop({ type: String, unique: true })
+  @Prop({ type: String })
   address: string;
 
-  @Prop({ type: String, unique: true })
+  @Prop({ type: String })
   image: string;
 
   @Prop({
     type: Mongoose.Schema.ObjectId,
     required: true,
-    ref: "accounts",
+    ref: "Account",
   })
   accountId: Account;
 

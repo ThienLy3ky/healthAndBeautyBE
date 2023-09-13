@@ -14,7 +14,7 @@ import {
 import { LoginBodyDTO } from "./dto/login.dto";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { RefreshTokenGuard } from "./guard/refresh-jwt.guard";
-import { RegisterBodyDTO } from "./dto/register.dto";
+import { RegisterBodyDTO, signupBodyDTO } from "./dto/register.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -34,15 +34,18 @@ export class AuthController {
   }
 
   @UseGuards(RefreshTokenGuard)
-  @Get("refresh")
-  refreshTokens(@Request() req: Request) {
-    // const userId = req.user["sub"];
-    // const refreshToken = req.user["refreshToken"];
-    // return this.authService.refreshTokens(userId, refreshToken);
+  @Post("refresh-token")
+  refreshTokens(@Request() req: any) {
+    return this.authService.refreshtoken(req.user.sub, req.user.refreshToken);
   }
 
   @Post("admin")
   createAdmin(@Body() payload: RegisterBodyDTO) {
     return this.authService.createAdmin(payload);
+  }
+
+  @Post("signup")
+  signup(@Body() payload: signupBodyDTO) {
+    return this.authService.signUp(payload);
   }
 }

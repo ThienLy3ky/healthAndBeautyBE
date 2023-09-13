@@ -10,7 +10,7 @@ export class AdminsService {
   async findByEmail(email: string): Promise<Admin> {
     return this.Admin.findOne({
       email,
-    });
+    }).lean();
   }
 
   async create({

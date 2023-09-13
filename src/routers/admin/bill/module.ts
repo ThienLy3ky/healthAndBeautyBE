@@ -10,5 +10,8 @@ import { BillService } from "./service";
   ],
   controllers: [BillController],
   providers: [BillService],
+  exports: [
+    MongooseModule.forFeature([{ name: Bill.name, schema: BillSchema }]),
+  ],
 })
 export class BillModule {}

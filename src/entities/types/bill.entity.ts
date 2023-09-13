@@ -3,25 +3,26 @@ import Mongoose, { Document } from "mongoose";
 import { Account } from "./user.entity";
 import { Admin } from "./admin.entity";
 import { DrugProduct } from "./product.entity";
-import { TypeBill } from "../enum/billType.enum";
+import { TypeBill, TypePayment } from "../enum/billType.enum";
 import { ProductSize } from "./size.entity";
 import { StyleProduct } from "./style.entity";
 import { GroupProduct } from "./group.entity";
+import { StatusBill } from "../enum/status.enum";
 class product {
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "products" })
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "DrugProduct" })
   product: DrugProduct;
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "sizes" })
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "ProductSize" })
   size: ProductSize;
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "groups" })
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "GroupProduct" })
   group: GroupProduct;
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "style" })
-  taste?: StyleProduct;
+  @Prop({ type: Mongoose.Schema.ObjectId, ref: "StyleProduct" })
+  style?: StyleProduct;
 
   @Prop({ type: Number, required: true, min: 0 })
-  quantity: number;
+  quanlity: number;
 
   @Prop({
     type: Number,
@@ -31,7 +32,6 @@ class product {
 
   @Prop({
     type: Number,
-    required: true,
   })
   discount: number;
 }
@@ -41,19 +41,31 @@ export class Bill extends Document {
   @Prop({ type: String, required: true })
   code: string;
 
+  @Prop({ type: String, required: true })
+  name: string;
+
+  @Prop({ type: String, required: true })
+  phone: string;
+
   @Prop({ type: Number, enum: TypeBill })
   type: TypeBill;
+
+  @Prop({ type: Number, enum: StatusBill, default: StatusBill.Pendding })
+  status: StatusBill;
+
+  @Prop({ type: Number, enum: TypePayment })
+  paymentType: TypePayment;
 
   @Prop({ type: product })
   Product: product[];
 
-  @Prop({ type: String, unique: true })
+  @Prop({ type: String })
   address: string;
 
   @Prop({
     type: Mongoose.Schema.ObjectId,
     required: true,
-    ref: "accounts",
+    ref: "Account",
   })
   accountId: Account;
 
@@ -71,15 +83,14 @@ export class Bill extends Document {
 
   @Prop({
     type: Number,
-    required: true,
-  })
-  status: number;
-
-  @Prop({
-    type: Number,
-    required: true,
   })
   delivery: number;
+
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  wasPayment: boolean;
 
   @Prop({
     type: Mongoose.Schema.ObjectId,

@@ -15,36 +15,46 @@ export class UsersService {
     @InjectModel(Information.name) private readonly infor: Model<Information>,
   ) {}
   async findByEmail(email: string): Promise<Account> {
-    return this.user.findOne({
-      where: {
+    return this.user
+      .findOne({
         email,
-      },
-    });
+      })
+      .lean();
   }
 
   async create({
     email,
     password_hash,
+    userName,
   }: {
     email: string;
     password_hash: string;
-  }): Promise<Admin> {
-    const entity = this.user.create({
+    userName: string;
+  }) {
+    const entity = await this.user.create({
       email,
       password_hash,
+      username: userName,
     });
-    return entity;
+    const ifo = await this.infor.create({
+      name: userName,
+      accountId: entity._id,
+    });
+    return { email, userName };
   }
 
   async findOne(id: ObjectId): Promise<Admin> {
-    return this.user.findById(id);
+    return this.infor.findById(id).populate({ path: "accountId" });
   }
 
   async getProfile(email: string) {
-    const user = await this.user.findOne({ email });
+    const user = await this.user.findOne({ email }).lean();
     if (!user) throw new UnauthorizedException("User not found");
-    const profile = await this.infor.findOne({ accountId: user._id });
-    return { user, profile };
+    const profile = await this.infor
+      .findOne({ accountId: user._id })
+      .populate({ path: "accountId", select: "-_id username email isActive" })
+      .lean();
+    return profile;
   }
 
   async updateToken(id: ObjectId, refreshToken: string): Promise<Admin> {

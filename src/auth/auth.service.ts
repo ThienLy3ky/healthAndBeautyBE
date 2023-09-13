@@ -1,12 +1,17 @@
 import { ConfigService } from "@nestjs/config";
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "../routers/users/users.service";
 import { AdminsService } from "src/routers/admins/admins.service";
 import { LoginBodyDTO } from "./dto/login.dto";
 import { hashSync, compareSync } from "bcrypt";
 import { ObjectId } from "mongoose";
-import { RegisterBodyDTO } from "./dto/register.dto";
+import { RegisterBodyDTO, signupBodyDTO } from "./dto/register.dto";
+import { Account } from "src/entities/types/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -19,16 +24,20 @@ export class AuthService {
 
   async validateUser({ email, password }): Promise<any> {
     const admin = await this.AdminService.findByEmail(email);
-    const password_hash_admin = compareSync(password, admin.password_hash);
-    if (admin && password_hash_admin) {
-      const { email, isActive, _id } = admin;
-      return { role: "admin", email, isActive, _id };
+    if (admin) {
+      const password_hash_admin = compareSync(password, admin.password_hash);
+      if (password_hash_admin) {
+        const { email, isActive, _id } = admin;
+        return { role: "admin", email, isActive, _id };
+      }
     }
     const user = await this.usersService.findByEmail(email);
-    const password_hash_user = compareSync(password, admin.password_hash);
-    if (user && password_hash_user) {
-      const { email, isActive, _id } = user;
-      return { role: "admin", email, isActive, _id };
+    if (user) {
+      const password_hash_user = compareSync(password, user.password_hash);
+      if (password_hash_user) {
+        const { email, isActive, _id } = user;
+        return { role: "user", email, isActive, _id };
+      }
     }
     return null;
   }
@@ -44,12 +53,12 @@ export class AuthService {
       role: user.role,
     };
   }
-  async getTokens({ email, sub }: any) {
+  async getTokens({ username, sub }: any) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub,
-          email,
+          username,
         },
         {
           secret: this.configService.get("keys").jwt_secret,
@@ -59,7 +68,7 @@ export class AuthService {
       this.jwtService.signAsync(
         {
           sub,
-          email,
+          username,
         },
         {
           secret: this.configService.get("keys").refresh_secrest,
@@ -95,20 +104,23 @@ export class AuthService {
     return hashSync(data, 10);
   }
 
-  async signUp(createUserDto: any): Promise<any> {
+  async signUp(createUserDto: signupBodyDTO): Promise<any> {
     // Check if user exists
-    const userExists = await this.usersService.findByEmail(createUserDto.email);
+    const userExists = await this.usersService.findByEmail(
+      createUserDto.emailSG,
+    );
     if (userExists) {
       throw new BadRequestException("Email already exists");
     }
 
     // Hash password
-    const hash = await this.hashData(createUserDto.password);
-    const newUser = await this.usersService.create({
-      email: createUserDto.email,
+    const hash = await this.hashData(createUserDto.passwordSG);
+    //validate emaill none
+    return this.usersService.create({
+      email: createUserDto.emailSG,
       password_hash: hash,
+      userName: createUserDto.userName,
     });
-    return;
   }
   async createAdmin({ email, password }: RegisterBodyDTO) {
     const password_hash = this.hashData(password);
@@ -117,5 +129,37 @@ export class AuthService {
 
   async getProfile(data: any) {
     return await this.usersService.getProfile(data.user);
+  }
+  async refreshtoken(
+    { user, role }: { user: string; role: string },
+    refreshToken: string,
+  ) {
+    console.log(
+      "🚀 ~ file: auth.service.ts:129 ~ AuthService ~ refreshtoken ~ payload:",
+      user,
+      role,
+      refreshToken,
+    );
+    let account: any = {};
+    if (role == "admin") {
+      account = await this.AdminService.findByEmail(user);
+    } else {
+      account = await this.usersService.findByEmail(user);
+    }
+    const check = compareSync(refreshToken, account.refreshToken);
+    if (check) {
+      const payload = {
+        username: account.username ?? account.email,
+        sub: { role: role, user: account.email },
+      };
+      const tokens = await this.getTokens(payload);
+      await this.updateRefreshToken(
+        account._id,
+        tokens.refreshToken,
+        account.role,
+      );
+      return tokens.accessToken;
+    }
+    throw new UnauthorizedException();
   }
 }

@@ -74,10 +74,6 @@ export class DrugProduct {
   expirationDate: Date;
   @Prop({
     type: Date,
-    validate: {
-      validator: isFutureDate,
-      message: "Expiration date must be in the future",
-    },
   })
   dateOfProduction: Date;
 }

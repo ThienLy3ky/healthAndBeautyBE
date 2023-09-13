@@ -1,17 +1,25 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { DrugProduct } from "src/entities/types/product.entity";
 import { CreateDrugProductDto, GetAll } from "./dto/dto";
 import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import {
   checkExit,
+  makeid,
   populatedAllPagination,
   populatedOneNotIdPagination,
   populatedSearchAllPagination,
 } from "src/utils";
 import { Sale } from "src/entities/types/sale.entity";
 import { Banner } from "src/entities/types/banner.entity";
+import { UsersService } from "../users/users.service";
+import { Bill } from "src/entities/types/bill.entity";
+import { TypePayment } from "src/entities/enum/billType.enum";
 
 @Injectable()
 export class ClientService {
@@ -22,6 +30,9 @@ export class ClientService {
     private readonly Sale: Model<Sale>,
     @InjectModel(Banner.name)
     private readonly Banner: Model<Banner>,
+    private readonly user: UsersService,
+    @InjectModel(Bill.name)
+    private readonly bill: Model<Bill>,
   ) {}
 
   async create(
@@ -226,11 +237,60 @@ export class ClientService {
     return this.productModel.findByIdAndDelete(id);
   }
 
-  async checkCode({ code }: CodeParam): Promise<boolean> {
-    return (await checkExit(this.productModel, {
-      code: code,
-    }))
-      ? true
-      : false;
+  async payment(
+    userData: any,
+    data: {
+      name: string;
+      phone: string;
+      address: any;
+      typePayment: TypePayment;
+      product: any;
+    },
+  ): Promise<any> {
+    const user = await this.user.findOne(userData._id);
+    if (!user) throw new UnauthorizedException();
+    const { name, phone, address, typePayment, product } = data;
+    const Product: any = [];
+    let sum = 0;
+    for (const item of product) {
+      const price = await this.productModel.aggregate([
+        { $match: { _id: new Types.ObjectId(item._id) } },
+        { $unwind: "$price" },
+        {
+          $match: {
+            "price.size": item.size,
+            "price.style": item.style,
+            "price.group": item.group,
+          },
+        },
+        { $project: { price: 1 } },
+      ]);
+      if (price.length) {
+        Product.push({
+          product: item._id,
+          size: item.size,
+          style: item.style,
+          group: item.group,
+          price: price[0].price?.priceNew,
+          quanlity: item.quanlity,
+        });
+        sum += price[0].price.priceNew * parseInt(item.quanlity);
+      }
+    }
+    const today = new Date();
+    const code = makeid(8) + today.toISOString();
+
+    return this.bill.create({
+      code,
+      name,
+      phone,
+      Product,
+      sumPrice: sum,
+      accountId: user?._id,
+      address: JSON.stringify(address),
+      paymentType: typePayment,
+      date: today,
+    });
+    return;
   }
 }

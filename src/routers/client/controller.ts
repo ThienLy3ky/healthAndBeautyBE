@@ -1,9 +1,19 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
 import { ClientService } from "./service";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CodeParam } from "src/interface/dto";
 import { GetAll } from "./dto/dto";
+import { JwtAuthGuard } from "src/auth/guard/jwt-auth.guard";
+import { User } from "src/decorators/admin.decorator";
 
 @Controller("Client")
 @ApiBearerAuth()
@@ -25,9 +35,10 @@ export class ClientController {
     return this.clientService.findDetail({ code });
   }
 
-  @Post()
-  async payment(@Body() payload: any) {
-    return;
+  @Post("payment")
+  @UseGuards(JwtAuthGuard)
+  async payment(@User() user: any, @Body() payload: any) {
+    return this.clientService.payment(user, payload);
   }
   // @Get(":id")
   // async update(
