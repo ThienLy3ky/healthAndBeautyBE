@@ -104,7 +104,10 @@ export class ClientService {
       populateArr,
       populateObj,
     );
-    const { items: flashProduct } = await populatedAllPagination(
+
+    const {
+      items: [flashProduct],
+    } = await populatedAllPagination(
       this.Sale,
       {},
       { limit: 30, page: 1, orderBy: "createdAt", order: "desc" },
@@ -278,7 +281,8 @@ export class ClientService {
       }
     }
     const today = new Date();
-    const code = makeid(8) + today.toISOString();
+    const code =
+      "HB-" + makeid(10) + today.toLocaleDateString().replaceAll("/", "");
 
     return this.bill.create({
       code,

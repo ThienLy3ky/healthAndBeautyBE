@@ -8,6 +8,12 @@ export class Account extends Document {
   username: string;
 
   @Prop({ type: String })
+  codeVerify: string;
+
+  @Prop({ type: Date })
+  expVerify: Date;
+
+  @Prop({ type: String })
   sdt: string;
 
   @Prop({ type: String, required: true, minlength: 8 })

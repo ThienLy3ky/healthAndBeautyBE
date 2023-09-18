@@ -12,16 +12,16 @@ import { Bill } from "src/entities/types/bill.entity";
 import { GetAll, UpdateBillDto } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { ByID } from "src/interface/dto";
+import { ByID, PaginationRes } from "src/interface/dto";
 
-@Controller("bill")
+@Controller("bills")
 @ApiBearerAuth()
 @ApiTags("Bill")
 export class BillController {
   constructor(private readonly companyService: BillService) {}
 
   @Get()
-  async findAll(@Query() query: GetAll): Promise<Bill[]> {
+  async findAll(@Query() query: GetAll): Promise<PaginationRes<Bill>> {
     return this.companyService.findAll(query);
   }
 

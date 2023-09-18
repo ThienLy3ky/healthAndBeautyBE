@@ -36,7 +36,7 @@ export class UsersService {
       password_hash,
       username: userName,
     });
-    const ifo = await this.infor.create({
+    await this.infor.create({
       name: userName,
       accountId: entity._id,
     });

@@ -134,12 +134,6 @@ export class AuthService {
     { user, role }: { user: string; role: string },
     refreshToken: string,
   ) {
-    console.log(
-      "🚀 ~ file: auth.service.ts:129 ~ AuthService ~ refreshtoken ~ payload:",
-      user,
-      role,
-      refreshToken,
-    );
     let account: any = {};
     if (role == "admin") {
       account = await this.AdminService.findByEmail(user);

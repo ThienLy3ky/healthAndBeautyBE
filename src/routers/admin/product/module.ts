@@ -8,11 +8,13 @@ import { DrugProductController } from "./controller";
 import { DrugProductService } from "./service";
 import { MulterModule } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
+import { Sale, SaleSchema } from "src/entities/types/sale.entity";
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: DrugProduct.name, schema: DrugProductSchema },
+      { name: Sale.name, schema: SaleSchema },
     ]),
     MulterModule.register({
       storage: diskStorage({

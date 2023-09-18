@@ -6,17 +6,17 @@ import { DrugProduct } from "./product.entity";
 @Schema({ collection: "sales", timestamps: true })
 export class Sale extends Document {
   @Prop({
-    type: Mongoose.Schema.ObjectId,
+    type: [Mongoose.Schema.ObjectId],
     ref: "DrugProduct",
     required: true, // image is required
   })
-  product: DrugProduct;
+  product: DrugProduct[];
 
   @Prop({
-    type: Number,
+    type: Date,
     required: true,
   })
-  quanlity: number;
+  dateSale: Date;
 
   @Prop({
     type: Number,

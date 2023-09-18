@@ -1,5 +1,5 @@
-import { IsPhoneNumber, IsEmail, IsNotEmpty } from "class-validator";
-import { ApiProperty, ApiOperation } from "@nestjs/swagger";
+import { IsNotEmpty } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 import { Pagination } from "src/interface/dto";
 
 export interface CreateBillSchema {
@@ -8,8 +8,14 @@ export interface CreateBillSchema {
   code: string;
 }
 export class GetAll extends Pagination {
-  @ApiProperty()
-  key: string;
+  @ApiProperty({ required: false })
+  key?: string;
+
+  @ApiProperty({ required: false })
+  order?: "asc" | "desc";
+
+  @ApiProperty({ required: false })
+  orderBy?: string;
 }
 export class CreateBillDto {
   @ApiProperty()

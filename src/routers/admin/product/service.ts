@@ -6,12 +6,15 @@ import { CreateDrugProductDto, GetAll, UpdateDrugProductDto } from "./dto/dto";
 import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import { checkExit, populatedAll, populatedAllPagination } from "src/utils";
 import { uploadFile } from "src/firebase";
+import { Sale } from "src/entities/types/sale.entity";
 
 @Injectable()
 export class DrugProductService {
   constructor(
     @InjectModel(DrugProduct.name)
     private readonly productModel: Model<DrugProduct>,
+    @InjectModel(Sale.name)
+    private readonly sale: Model<Sale>,
   ) {}
 
   async create(
@@ -112,5 +115,16 @@ export class DrugProductService {
       list.push(element[0]);
     }
     return list;
+  }
+  async Sale({
+    ListSale,
+    dateSale,
+    PriceSale,
+  }: {
+    ListSale: string[];
+    dateSale: Date;
+    PriceSale: number;
+  }) {
+    return this.sale.create({ product: ListSale, dateSale, price: PriceSale });
   }
 }

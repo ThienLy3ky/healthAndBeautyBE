@@ -46,7 +46,17 @@ export class DrugProductController {
   async findOne(@Param() { id }: ByID): Promise<DrugProduct> {
     return this.productService.findOne({ id });
   }
-
+  @Put("/sale")
+  async sale(
+    @Body()
+    updateDrugProduct: {
+      ListSale: string[];
+      dateSale: Date;
+      PriceSale: number;
+    },
+  ) {
+    return this.productService.Sale(updateDrugProduct);
+  }
   @Put(":id")
   async update(
     @Param() { id }: ByID,

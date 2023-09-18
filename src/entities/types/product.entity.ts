@@ -76,6 +76,12 @@ export class DrugProduct {
     type: Date,
   })
   dateOfProduction: Date;
+
+  @Prop({
+    type: Date,
+    default: null,
+  })
+  dateSale: Date;
 }
 
 export const DrugProductSchema = SchemaFactory.createForClass(DrugProduct);
