@@ -35,8 +35,8 @@ export class CreateBannerDto {
   @IsNotEmpty()
   type: BannnerType;
 
-  @ApiProperty({ type: Schema.Types.ObjectId })
-  product?: Schema.Types.ObjectId;
+  @ApiProperty({ type: String })
+  link?: string;
 }
 
 export class UpdateBannerDto {
@@ -55,6 +55,6 @@ export class UpdateBannerDto {
   @IsNotEmpty()
   type: BannnerType;
 
-  @ApiProperty({ type: Schema.Types.ObjectId })
-  product?: Schema.Types.ObjectId;
+  @ApiProperty({ type: String })
+  link?: string;
 }

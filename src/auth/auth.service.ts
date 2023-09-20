@@ -7,11 +7,9 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "../routers/users/users.service";
 import { AdminsService } from "src/routers/admins/admins.service";
-import { LoginBodyDTO } from "./dto/login.dto";
 import { hashSync, compareSync } from "bcrypt";
 import { ObjectId } from "mongoose";
 import { RegisterBodyDTO, signupBodyDTO } from "./dto/register.dto";
-import { Account } from "src/entities/types/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -155,5 +153,16 @@ export class AuthService {
       return tokens.accessToken;
     }
     throw new UnauthorizedException();
+  }
+
+  async googleLogin(req) {
+    if (!req.user) {
+      return "No user from google";
+    }
+    console.log(req.user);
+    return {
+      message: "User information from google",
+      user: req.user,
+    };
   }
 }

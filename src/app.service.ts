@@ -8,11 +8,14 @@ import { Setting } from "./entities/types/setting.entity";
 import { GroupProduct } from "./entities/types/group.entity";
 import { StyleProduct } from "./entities/types/style.entity";
 import { Company } from "./entities/types/companies.entity";
+import { DrugProduct } from "./entities/types/product.entity";
 @Injectable()
 export class AppService {
   constructor(
     @InjectModel(GroupProduct.name)
     private readonly productGroupModel: Model<GroupProduct>,
+    @InjectModel(DrugProduct.name)
+    private readonly product: Model<DrugProduct>,
     @InjectModel(StyleProduct.name)
     private readonly productStyleModel: Model<StyleProduct>,
     @InjectModel(ProductType.name)
@@ -32,7 +35,7 @@ export class AppService {
   }
 
   async getTemplate() {
-    const [types, categories, setting, companies] = await Promise.all([
+    const [types, categories, setting, companies, keyWord] = await Promise.all([
       this.productTypeModel
         .find({}, { _id: 1, name: 1, code: 1, image: 1 })
         .lean(),
@@ -42,8 +45,21 @@ export class AppService {
         .lean(),
       this.settingModel.findOne().lean(),
       this.CompanyModel.find({}, { _id: 1, name: 1, code: 1 }).lean(),
+      this.product.aggregate([
+        {
+          $project: {
+            _id: 0,
+            keyWord: 1,
+          },
+        },
+        { $limit: 30 },
+        { $unwind: "$keyWord" },
+        {
+          $group: { _id: 0, keyWord: { $addToSet: "$keyWord" } },
+        },
+      ]),
     ]);
-    return { types, categories, setting, companies };
+    return { types, categories, setting, companies, keyWord };
   }
   async getGroupPrice() {
     const [groups, sizes, styles] = await Promise.all([

@@ -31,7 +31,10 @@ import { MulterModule } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { AuthModule } from "./auth/auth.module";
 import { ClientModule } from "./routers/client/module";
+import { MailingModule } from "./mailing/mailing.module";
+import { MailerModule } from "@nestjs-modules/mailer";
 
+import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 @Module({
   imports: [
     MongooseModule.forRootAsync({
@@ -52,6 +55,17 @@ import { ClientModule } from "./routers/client/module";
         destination: "./uploads",
       }),
     }),
+    MailerModule.forRoot({
+      transport: "smtps://user@domain.com:pass@smtp.domain.com",
+      template: {
+        dir: process.cwd() + "/templates/",
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    }),
+    MailingModule,
     ClientModule,
     AuthModule,
     CompanyModule,
@@ -68,6 +82,7 @@ import { ClientModule } from "./routers/client/module";
     ProductSizeModule,
     StyleProductModule,
     UploadModule,
+    MailingModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,4 +1,3 @@
-import { jwtConstants } from "./constants/constants";
 import { AuthController } from "./auth.controller";
 import { JwtModule } from "@nestjs/jwt";
 import { UsersModule } from "../routers/users/users.model";

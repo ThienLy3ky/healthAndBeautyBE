@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import Mongoose, { Document } from "mongoose";
-import { DrugProduct } from "./product.entity";
+import { Document } from "mongoose";
 import { BannnerType } from "../enum/typeBanner.enum";
 
 @Schema({ collection: "banner", timestamps: true })
@@ -8,8 +7,8 @@ export class Banner extends Document {
   @Prop({ type: String })
   image: string;
 
-  @Prop({ type: Mongoose.Schema.ObjectId, ref: "DrugProduct" })
-  product: DrugProduct;
+  @Prop({ type: String })
+  link: string;
 
   @Prop({
     enum: BannnerType,

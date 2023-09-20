@@ -45,7 +45,7 @@ export class GetAll extends Pagination {
     minLength: 2,
     type: Number,
   })
-  price?: [number];
+  price?: number[];
 }
 export class CreateDrugProductDto {
   @ApiProperty()
@@ -62,13 +62,8 @@ export class CreateDrugProductDto {
   sumprice: string;
 
   @ApiProperty({
-    isArray: true,
-    type: () => [String],
+    type: [String],
   })
-  // @IsArray()
-  // "each" tells class-validator to run the validation on each item of the array
-  // @IsString({ each: true })
-  // @ArrayMinSize(1)
   keyWord: string[];
 
   @ApiProperty({ type: [CreateDrugProductSchema] })
@@ -78,13 +73,13 @@ export class CreateDrugProductDto {
   quantity: number;
 
   @ApiProperty({ type: [String] })
-  company: [string];
+  company: string[];
 
   @ApiProperty({ type: [String] })
-  type: [string];
+  type: string[];
 
   @ApiProperty({ type: [String] })
-  categories: [string];
+  categories: string[];
 }
 
 export class UpdateDrugProductDto {

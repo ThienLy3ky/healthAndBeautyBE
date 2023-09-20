@@ -20,7 +20,7 @@ export class BannerService {
   }
 
   async findAll(query: GetAll): Promise<Banner[]> {
-    return this.bannerModel.find().populate("product").lean().exec();
+    return this.bannerModel.find().lean().exec();
   }
 
   async findOne({ id }: ByID): Promise<Banner> {

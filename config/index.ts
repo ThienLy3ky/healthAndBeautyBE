@@ -12,6 +12,10 @@ interface iConfig {
     refresh_secrest: string;
   };
   useEncrypt: boolean;
+  googleClientId: string;
+  email: string;
+  googleClientSecret: string;
+  refresh_token_email: string;
 }
 export default (): iConfig => ({
   env: process.env.NODE,
@@ -30,4 +34,8 @@ export default (): iConfig => ({
     consumerKey: process.env.CONSUMER_KEY,
   },
   useEncrypt: process.env.ENCRYPT ? true : false,
+  googleClientId: process.env.GOOGLE_CLIENT_ID ?? "",
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+  email: process.env.EMAIL ?? "",
+  refresh_token_email: process.env.REFRESH_TOKEN_EMAIl ?? "",
 });

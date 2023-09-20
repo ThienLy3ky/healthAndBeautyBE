@@ -1,15 +1,10 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { DrugProduct } from "src/entities/types/product.entity";
 import { CreateDrugProductDto, GetAll } from "./dto/dto";
 import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import {
-  checkExit,
   makeid,
   populatedAllPagination,
   populatedOneNotIdPagination,
@@ -20,6 +15,7 @@ import { Banner } from "src/entities/types/banner.entity";
 import { UsersService } from "../users/users.service";
 import { Bill } from "src/entities/types/bill.entity";
 import { TypePayment } from "src/entities/enum/billType.enum";
+import { BannnerType } from "src/entities/enum/typeBanner.enum";
 
 @Injectable()
 export class ClientService {
@@ -104,7 +100,35 @@ export class ClientService {
       populateArr,
       populateObj,
     );
-
+    const [{ product: lisIdBestSale }] = await this.bill.aggregate([
+      { $unwind: "$Product" },
+      {
+        $project: {
+          _id: 1,
+          product: "$Product.product",
+          quanl: "$Product.quanlity",
+        },
+      },
+      {
+        $group: {
+          _id: "$product",
+          myCount: { $sum: 1 },
+          sum: { $sum: "$quanl" },
+        },
+      },
+      {
+        $sort: { myCount: -1, sum: -1 },
+      },
+      { $limit: 30 },
+      { $group: { _id: 0, product: { $push: { $toString: "$_id" } } } },
+    ]);
+    const { items: saleProduct } = await populatedAllPagination(
+      this.productModel,
+      { _id: { $in: lisIdBestSale } },
+      { limit: 30, page: 1, orderBy: "createdAt", order: "desc" },
+      populateArr,
+      populateObj,
+    );
     const {
       items: [flashProduct],
     } = await populatedAllPagination(
@@ -113,17 +137,21 @@ export class ClientService {
       { limit: 30, page: 1, orderBy: "createdAt", order: "desc" },
       populatSale,
     );
+
     const [bannerText, bannerImage] = await Promise.all([
       this.Banner.find({ image: undefined }).limit(30).lean(),
-      this.Banner.find({ image: { $ne: undefined } })
+      this.Banner.find({
+        /* image: { $ne: undefined } */ type: BannnerType.pannnerSale,
+      })
         .limit(30)
         .lean(),
+      this.productModel,
     ]);
     return {
       newProduct,
       flashProduct,
-      saleProduct: [],
       bannerText,
+      saleProduct,
       bannerImage,
     };
   }
@@ -178,8 +206,22 @@ export class ClientService {
 
   async getSearch(query: GetAll): Promise<PaginationRes<DrugProduct>> {
     const field = { _id: 1, name: 1 };
-    const { limit, page, key, order, orderBy, company, type, categories } =
-      query;
+    const {
+      limit,
+      page,
+      key,
+      order,
+      orderBy,
+      company,
+      type,
+      categories,
+      price,
+    } = query;
+    console.log(
+      "🚀 ~ file: service.ts:210 ~ ClientService ~ getSearch ~ price:",
+      price,
+    );
+    const [min, max] = price;
     const populateArr = {
         path: "price",
         populate: [
@@ -220,6 +262,8 @@ export class ClientService {
     if (company) where = { ...where, company: { $in: company } };
     if (type) where = { ...where, type: { $in: type } };
     if (categories) where = { ...where, categories: { $in: categories } };
+    if (price)
+      where = { ...where, "price.priceNew": { $gt: price[0], $lt: price[1] } };
     const { items, total } = await populatedSearchAllPagination(
       this.productModel,
       where,
