@@ -65,7 +65,6 @@ import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handleba
         },
       },
     }),
-    MailingModule,
     ClientModule,
     AuthModule,
     CompanyModule,

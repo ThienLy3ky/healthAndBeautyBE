@@ -27,7 +27,7 @@ export class Information extends Document {
   name: string;
 
   @Prop({ type: String })
-  address: string;
+  address?: string;
 
   @Prop({ type: String })
   image: string;

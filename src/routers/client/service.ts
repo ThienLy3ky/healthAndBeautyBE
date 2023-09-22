@@ -221,7 +221,6 @@ export class ClientService {
       "🚀 ~ file: service.ts:210 ~ ClientService ~ getSearch ~ price:",
       price,
     );
-    const [min, max] = price;
     const populateArr = {
         path: "price",
         populate: [
@@ -262,8 +261,12 @@ export class ClientService {
     if (company) where = { ...where, company: { $in: company } };
     if (type) where = { ...where, type: { $in: type } };
     if (categories) where = { ...where, categories: { $in: categories } };
-    if (price)
-      where = { ...where, "price.priceNew": { $gt: price[0], $lt: price[1] } };
+    // if (price)
+    //   where = { ...where, "price.priceNew": { $gt: price[0], $lt: price[1] } };
+    console.log(
+      "🚀 ~ file: service.ts:267 ~ ClientService ~ getSearch ~ where:",
+      where,
+    );
     const { items, total } = await populatedSearchAllPagination(
       this.productModel,
       where,

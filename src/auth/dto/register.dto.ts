@@ -61,3 +61,16 @@ export class signupBodyDTO {
   @ApiProperty()
   userName: string;
 }
+
+export class verifyCode {
+  @IsNotEmpty()
+  @IsEmail()
+  @ApiProperty()
+  @Length(1, 50)
+  email: string;
+
+  @IsNotEmpty()
+  @ApiProperty()
+  @Length(5)
+  code: string;
+}

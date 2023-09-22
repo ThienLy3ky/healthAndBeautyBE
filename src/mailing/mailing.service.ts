@@ -4,6 +4,11 @@ import { ConfigService } from "@nestjs/config";
 import { google } from "googleapis";
 import { Options } from "nodemailer/lib/smtp-transport";
 
+interface DataSendEmail {
+  code: string;
+  to: string;
+  user: any;
+}
 @Injectable()
 export class MailingService {
   constructor(
@@ -43,22 +48,23 @@ export class MailingService {
     };
     this.mailerService.addTransporter("gmail", config);
   }
-  public async sendMail() {
+
+  public async sendMail({ to, code, user }: DataSendEmail) {
     await this.setTransport();
     this.mailerService
       .sendMail({
         transporterName: "gmail",
-        to: "thienlytky123@gmail.com", // list of receivers
+        to: to, // list of receivers
         from: "noreply@nestjs.com", // sender address
         subject: "Verficiaction Code", // Subject line
         template: "action",
         context: {
           // Data to be sent to template engine..
-          code: "38320",
+          code: code,
         },
       })
-      .then((success) => {
-        console.log(success);
+      .then(() => {
+        console.log("success");
       })
       .catch((err) => {
         console.log("Err send:", err);

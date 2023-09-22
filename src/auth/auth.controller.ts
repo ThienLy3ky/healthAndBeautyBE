@@ -11,13 +11,12 @@ import {
   HttpCode,
   HttpStatus,
   Req,
+  Param,
 } from "@nestjs/common";
 import { LoginBodyDTO } from "./dto/login.dto";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { RefreshTokenGuard } from "./guard/refresh-jwt.guard";
-import { RegisterBodyDTO, signupBodyDTO } from "./dto/register.dto";
-import { AuthGuard } from "@nestjs/passport";
-import { GoogleGuard } from "./guard/google.guard";
+import { RegisterBodyDTO, signupBodyDTO, verifyCode } from "./dto/register.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -51,6 +50,17 @@ export class AuthController {
   signup(@Body() payload: signupBodyDTO) {
     return this.authService.signUp(payload);
   }
+
+  @Post("verify")
+  verifyCode(@Body() payload: verifyCode) {
+    return this.authService.verifyCode(payload);
+  }
+
+  @Post("resend/:email")
+  reSendCode(@Param("email") email: string) {
+    return this.authService.reSendCode(email);
+  }
+
   @Get("google")
   // @UseGuards(GoogleGuard)
   async googleAuth(@Req() req) {

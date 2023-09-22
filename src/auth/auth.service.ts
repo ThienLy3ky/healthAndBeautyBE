@@ -9,7 +9,9 @@ import { UsersService } from "../routers/users/users.service";
 import { AdminsService } from "src/routers/admins/admins.service";
 import { hashSync, compareSync } from "bcrypt";
 import { ObjectId } from "mongoose";
-import { RegisterBodyDTO, signupBodyDTO } from "./dto/register.dto";
+import { RegisterBodyDTO, signupBodyDTO, verifyCode } from "./dto/register.dto";
+import { MailingService } from "src/mailing/mailing.service";
+import { generatecode, makeid } from "src/utils";
 
 @Injectable()
 export class AuthService {
@@ -18,6 +20,7 @@ export class AuthService {
     private AdminService: AdminsService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private mailService: MailingService,
   ) {}
 
   async validateUser({ email, password }): Promise<any> {
@@ -30,6 +33,7 @@ export class AuthService {
       }
     }
     const user = await this.usersService.findByEmail(email);
+    if (user.isActive !== true) return {};
     if (user) {
       const password_hash_user = compareSync(password, user.password_hash);
       if (password_hash_user) {
@@ -40,6 +44,7 @@ export class AuthService {
     return null;
   }
   async login(user: any) {
+    if (!user.email) return {};
     const payload = {
       username: user.email,
       sub: { role: "admin", user: user.email },
@@ -104,9 +109,7 @@ export class AuthService {
 
   async signUp(createUserDto: signupBodyDTO): Promise<any> {
     // Check if user exists
-    const userExists = await this.usersService.findByEmail(
-      createUserDto.emailSG,
-    );
+    const userExists = await this.usersService.findOne(createUserDto.emailSG);
     if (userExists) {
       throw new BadRequestException("Email already exists");
     }
@@ -114,11 +117,19 @@ export class AuthService {
     // Hash password
     const hash = await this.hashData(createUserDto.passwordSG);
     //validate emaill none
-    return this.usersService.create({
+    const exprice = new Date(
+      new Date().setUTCMinutes(new Date().getUTCMinutes() + 10),
+    );
+    const code = generatecode(5);
+    const user = await this.usersService.create({
       email: createUserDto.emailSG,
       password_hash: hash,
       userName: createUserDto.userName,
+      codeVerify: code,
+      expVerify: exprice,
     });
+    await this.mailService.sendMail({ to: user?.email, code, user });
+    return user;
   }
   async createAdmin({ email, password }: RegisterBodyDTO) {
     const password_hash = this.hashData(password);
@@ -138,6 +149,7 @@ export class AuthService {
     } else {
       account = await this.usersService.findByEmail(user);
     }
+    if (account.isActive !== true) return "Not Acitve";
     const check = compareSync(refreshToken, account.refreshToken);
     if (check) {
       const payload = {
@@ -164,5 +176,38 @@ export class AuthService {
       message: "User information from google",
       user: req.user,
     };
+  }
+
+  async verifyCode({ email, code }: verifyCode) {
+    const today = new Date();
+    const user = await this.usersService.findByEmail(email);
+    if (user.isActive === true) return true;
+    if (user.codeVerify !== code || today > user.expVerify)
+      throw new BadRequestException("Mã code hết hạn");
+    const da = await this.usersService.activeUser(user._id);
+    return da ? true : false;
+  }
+  async reSendCode(email: string): Promise<any> {
+    const today = new Date();
+    const userExists = await this.usersService.findByEmail(email);
+    if (!userExists) {
+      throw new BadRequestException("Email already exists");
+    }
+    if (today < userExists.expVerify)
+      return {
+        exp: userExists.expVerify,
+        message:
+          "Ban vui long cho sau " +
+          (userExists.expVerify.getUTCMinutes() - today.getUTCMinutes()),
+      };
+    const exprice = new Date(today.setUTCMinutes(today.getUTCMinutes() + 10));
+    const code = generatecode(5);
+    await this.mailService.sendMail({
+      to: userExists?.email,
+      code,
+      user: userExists,
+    });
+    await this.usersService.updateCode(userExists._id, code, exprice);
+    return { exp: exprice, email };
   }
 }
