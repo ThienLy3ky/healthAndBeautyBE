@@ -100,7 +100,7 @@ export class ClientService {
       populateArr,
       populateObj,
     );
-    const [{ product: lisIdBestSale }] = await this.bill.aggregate([
+    const [product] = await this.bill.aggregate([
       { $unwind: "$Product" },
       {
         $project: {
@@ -124,7 +124,7 @@ export class ClientService {
     ]);
     const { items: saleProduct } = await populatedAllPagination(
       this.productModel,
-      { _id: { $in: lisIdBestSale } },
+      { _id: { $in: product?.product ?? [] } },
       { limit: 30, page: 1, orderBy: "createdAt", order: "desc" },
       populateArr,
       populateObj,
