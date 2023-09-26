@@ -47,7 +47,7 @@ export class AuthService {
     if (!user.email) return {};
     const payload = {
       username: user.email,
-      sub: { role: "admin", user: user.email },
+      sub: { role: user.role, user: user.email },
     };
     const tokens = await this.getTokens(payload);
     await this.updateRefreshToken(user._id, tokens.refreshToken, user.role);

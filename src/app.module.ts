@@ -35,6 +35,7 @@ import { MailingModule } from "./mailing/mailing.module";
 import { MailerModule } from "@nestjs-modules/mailer";
 
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
+import { UsersModule } from "./routers/users/users.model";
 @Module({
   imports: [
     MongooseModule.forRootAsync({
@@ -65,6 +66,7 @@ import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handleba
         },
       },
     }),
+    UsersModule,
     ClientModule,
     AuthModule,
     CompanyModule,

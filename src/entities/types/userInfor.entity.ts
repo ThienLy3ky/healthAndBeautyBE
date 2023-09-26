@@ -26,8 +26,8 @@ export class Information extends Document {
   @Prop({ type: String, required: true })
   name: string;
 
-  @Prop({ type: String })
-  address?: string;
+  @Prop({ type: [String] })
+  address?: string[];
 
   @Prop({ type: String })
   image: string;
