@@ -1,13 +1,21 @@
-import { IsNotEmpty } from "class-validator";
+import {
+  IsArray,
+  IsNotEmpty,
+  ArrayMinSize,
+  ArrayMaxSize,
+  IsInt,
+  IsOptional,
+} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Pagination } from "src/interface/dto";
 import { Schema } from "mongoose";
+import { Type } from "class-transformer";
 
 class CreateDrugProductSchema {
   @ApiProperty({ type: [String] })
   size: string[];
 
-  @ApiProperty({ type: Number })
+  @ApiProperty({ type: String })
   productid: string;
 
   @ApiProperty({ type: Number })
@@ -40,11 +48,13 @@ export class GetAll extends Pagination {
 
   @ApiProperty({
     required: false,
-    isArray: true,
-    maxLength: 2,
-    minLength: 2,
-    type: Number,
   })
+  @IsOptional()
+  @Type(() => Number)
+  @IsArray()
+  @ArrayMinSize(2)
+  @ArrayMaxSize(2)
+  @IsInt({ each: true })
   price?: number[];
 }
 export class CreateDrugProductDto {

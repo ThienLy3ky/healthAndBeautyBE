@@ -33,6 +33,7 @@ export class AuthService {
       }
     }
     const user = await this.usersService.findByEmail(email);
+    if (!user) return null;
     if (user.isActive !== true) return {};
     if (user) {
       const password_hash_user = compareSync(password, user.password_hash);

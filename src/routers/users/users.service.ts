@@ -4,12 +4,14 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId, Types } from "mongoose";
-import { Status, StatusBill } from "src/entities/enum/status.enum";
+import { Model, ObjectId } from "mongoose";
+import { StatusBill } from "src/entities/enum/status.enum";
 import { Admin } from "src/entities/types/admin.entity";
 import { Bill } from "src/entities/types/bill.entity";
 import { Account } from "src/entities/types/user.entity";
 import { Information } from "src/entities/types/userInfor.entity";
+import { ChangePass, UpdateProfile } from "./dto";
+import { compareSync, hashSync } from "bcrypt";
 
 // This should be a real class/interface representing a user entity
 export type User = any;
@@ -67,16 +69,19 @@ export class UsersService {
     if (!user) throw new UnauthorizedException("User not found");
     const profile = await this.infor
       .findOne({ accountId: user._id })
-      .populate({ path: "accountId", select: "-_id username email isActive" })
+      .populate({
+        path: "accountId",
+        select: "-_id username email isActive sdt",
+      })
       .lean();
     return profile;
   }
 
   async updateToken(id: ObjectId, refreshToken: string): Promise<Admin> {
-    return this.user.findByIdAndUpdate(id, { refreshToken });
+    return this.user.findByIdAndUpdate(id, { refreshToken }).lean();
   }
   async activeUser(id: ObjectId): Promise<Account> {
-    return this.user.findByIdAndUpdate(id, { isActive: true });
+    return this.user.findByIdAndUpdate(id, { isActive: true }).lean();
   }
   async updateCode(
     id: ObjectId,
@@ -88,19 +93,16 @@ export class UsersService {
 
   async getListOrder(user, status?: StatusBill) {
     const field = { _id: 0, name: 1 };
-    console.log(
-      "🚀 ~ file: users.service.ts:90 ~ UsersService ~ getListOrder ~ StatusBill:",
-      status,
-    );
+    const accountId = await this.findByEmail(user.accountId.email);
     const data = await this.bill
-      .find(/* { accountId: user._id } */ status ? { status } : {})
+      .find(status ? { status, accountId } : { accountId })
       .populate({
         path: "Product",
         populate: [
           {
             path: "product",
             model: "DrugProduct",
-            select: { _id: 1, name: 1 },
+            select: { _id: 1, name: 1, code: 1 },
           },
           {
             path: "size",
@@ -118,23 +120,22 @@ export class UsersService {
             select: field,
           },
         ],
-      });
-    console.log(
-      "🚀 ~ file: users.service.ts:101 ~ UsersService ~ getListOrder ~ data:",
-      data,
-    );
+      })
+      .lean();
     return data;
   }
+
   async getlistCode(user) {
     const data = await this.bill.find();
   }
   async cancelOrder(codebill, user) {
-    console.log(
-      "🚀 ~ file: users.service.ts:96 ~ UsersService ~ cancelOrder ~ user:",
-      user ? true : false,
-    );
+    const accountId = await this.findByEmail(user.accountId.email);
     const check = await this.bill
-      .findOne({ code: codebill, status: { $lt: StatusBill.Shipping } })
+      .findOne({
+        code: codebill,
+        accountId,
+        status: { $lt: StatusBill.Shipping, $gt: StatusBill.Cancel },
+      })
       .lean();
     if (!check) throw new BadRequestException("Không tìm thấy đơn hàng");
     return await this.bill.updateOne(
@@ -142,17 +143,39 @@ export class UsersService {
       { status: StatusBill.Cancel },
     );
   }
-  async updateProfile(code: string, user) {
-    const data = await this.bill.find();
+  async updateProfile(data: UpdateProfile, user: any) {
+    const { name, sdt, username, password, image } = data;
+    const accountId = await this.user
+      .findOne({ email: user.accountId.email })
+      .lean();
+    const password_hash_admin = compareSync(password, accountId.password_hash);
+    if (!password_hash_admin) return false;
+    await Promise.all([
+      this.infor.findOneAndUpdate({ _id: user._id }, { name, image }).lean(),
+      this.user.findOneAndUpdate({ _id: accountId._id }, { username, sdt }),
+      ,
+    ]);
+    return true;
+  }
+  async ChangePass({ newPassWord, password }: ChangePass, user: any) {
+    const accountId = await this.findByEmail(user.accountId.email);
+    const password_hash_admin = compareSync(password, accountId.password_hash);
+    if (!password_hash_admin) return false;
+    await Promise.all([
+      this.user.findOneAndUpdate(
+        { _id: accountId._id },
+        { password_hash: hashSync(newPassWord, 10) },
+      ),
+      ,
+    ]);
+    return true;
   }
   async addAddress(user, address: string) {
-    console.log(
-      "🚀 ~ file: users.service.ts:149 ~ UsersService ~ addAddress ~ address:",
-      address,
-    );
-    const res = await this.infor.findByIdAndUpdate(user._id, {
-      $push: { address },
-    });
+    const res = await this.infor
+      .findByIdAndUpdate(user._id, {
+        $push: { address },
+      })
+      .lean();
     return res ? true : false;
   }
 }

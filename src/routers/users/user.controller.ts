@@ -10,21 +10,29 @@ import {
   Req,
   Param,
   Query,
+  Put,
 } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/guard/jwt-auth.guard";
 import { UsersService } from "./users.service";
 import { StatusBill } from "src/entities/enum/status.enum";
 import { User } from "src/decorators/admin.decorator";
+import { AddAddress, CancelOrder, ChangePass, UpdateProfile } from "./dto";
 
 @Controller("user")
 export class UserController {
   constructor(private userService: UsersService) {}
-  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @Post()
-  async updateProfile(@Request() req, @Body() body) {
-    return;
+  @Put()
+  async updateProfile(@User() user: any, @Body() body: UpdateProfile) {
+    return this.userService.updateProfile(body, user);
+  }
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Put("/change-passwork")
+  changePassword(@User() user: any, @Body() body: ChangePass) {
+    return this.userService.ChangePass(body, user);
   }
 
   @ApiBearerAuth()
@@ -36,17 +44,14 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post("/address")
-  addAddress(
-    @Body() { addAddress }: { addAddress?: string },
-    @User() user: any,
-  ) {
+  addAddress(@Body() { addAddress }: AddAddress, @User() user: any) {
     return this.userService.addAddress(user, addAddress);
   }
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @Get("/cancel")
-  orderCancel(@Request() req) {
-    return req.user;
+  @Post("/cancel")
+  orderCancel(@Body() { code }: CancelOrder, @User() user: any) {
+    return this.userService.cancelOrder(code, user);
   }
 
   @ApiBearerAuth()

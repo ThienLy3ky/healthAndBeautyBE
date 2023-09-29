@@ -217,10 +217,6 @@ export class ClientService {
       categories,
       price,
     } = query;
-    console.log(
-      "🚀 ~ file: service.ts:210 ~ ClientService ~ getSearch ~ price:",
-      price,
-    );
     const populateArr = {
         path: "price",
         populate: [
@@ -250,23 +246,29 @@ export class ClientService {
           path: "type",
           select: field,
         },
-        ,
         {
           path: "categories",
           select: field,
         },
       ];
     let where: any = {};
-    if (key) where.name = { name: { $regex: key, $options: "i" } };
+    if (key)
+      where = {
+        $or: [
+          { name: { $regex: key, $options: "i" } },
+          { code: { $regex: key, $options: "i" } },
+          { summary: { $regex: key, $options: "i" } },
+          { keyWord: { $regex: key, $options: "i" } },
+        ],
+      };
     if (company) where = { ...where, company: { $in: company } };
     if (type) where = { ...where, type: { $in: type } };
     if (categories) where = { ...where, categories: { $in: categories } };
-    // if (price)
-    //   where = { ...where, "price.priceNew": { $gt: price[0], $lt: price[1] } };
-    console.log(
-      "🚀 ~ file: service.ts:267 ~ ClientService ~ getSearch ~ where:",
-      where,
-    );
+    if (price)
+      where = {
+        ...where,
+        "price.priceNew": { $gt: price[0], $lt: price[1] },
+      };
     const { items, total } = await populatedSearchAllPagination(
       this.productModel,
       where,
@@ -283,9 +285,6 @@ export class ClientService {
     };
   }
   ///
-  async profile({ id }: ByID): Promise<DrugProduct> {
-    return this.productModel.findByIdAndDelete(id);
-  }
 
   async payment(
     userData: any,
@@ -297,7 +296,7 @@ export class ClientService {
       product: any;
     },
   ): Promise<any> {
-    const user = await this.user.findOne(userData._id);
+    const user = await this.user.findOne(userData.accountId.email);
     if (!user) throw new UnauthorizedException();
     const { name, phone, address, typePayment, product } = data;
     const Product: any = [];

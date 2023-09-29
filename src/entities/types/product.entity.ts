@@ -7,6 +7,7 @@ import { GroupProduct } from "./group.entity";
 import { ProductType } from "./type.entity";
 import { Company } from "./companies.entity";
 import { Category } from "./categories.entity";
+import { Account } from "./user.entity";
 
 export type DrugProductDocument = DrugProduct & Document;
 class Price {
@@ -34,7 +35,20 @@ class Price {
   })
   image: string;
 }
+class Review {
+  @Prop({
+    type: Mongoose.Schema.ObjectId,
+    required: true,
+    ref: "Account",
+  })
+  accountId: Account;
 
+  @Prop({ type: String })
+  comment?: string;
+
+  @Prop({ type: Number })
+  rate?: number;
+}
 @Schema({ collection: "product", timestamps: true })
 export class DrugProduct {
   @Prop({ type: String, required: true, unique: true })
@@ -52,8 +66,11 @@ export class DrugProduct {
   @Prop({ type: [String] })
   keyWord?: string[];
 
-  @Prop({ type: Price, min: 0 })
+  @Prop({ type: Price })
   price: Price[];
+
+  @Prop({ type: Review })
+  review: Review[];
 
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "Company" })
   company: Company;
@@ -63,6 +80,9 @@ export class DrugProduct {
 
   @Prop({ type: Mongoose.Schema.ObjectId, ref: "Category" })
   categories: Category;
+
+  @Prop({ type: Number, default: 5 })
+  rate: number;
 
   @Prop({
     type: Date,

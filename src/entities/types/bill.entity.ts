@@ -34,18 +34,17 @@ class product {
     type: Number,
   })
   discount: number;
+
+  @Prop({
+    type: String,
+  })
+  image: string;
 }
 
 @Schema({ collection: "bills", timestamps: true })
 export class Bill extends Document {
   @Prop({ type: String, required: true })
   code: string;
-
-  @Prop({ type: String, required: true })
-  name: string;
-
-  @Prop({ type: String, required: true })
-  phone: string;
 
   @Prop({ type: Number, enum: TypeBill })
   type: TypeBill;
@@ -85,6 +84,11 @@ export class Bill extends Document {
     type: Number,
   })
   delivery: number;
+
+  @Prop({
+    type: Number,
+  })
+  ship: number;
 
   @Prop({
     type: Boolean,
