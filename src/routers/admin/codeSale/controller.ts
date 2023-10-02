@@ -7,6 +7,7 @@ import {
   Post,
   Query,
   Put,
+  UseGuards,
 } from "@nestjs/common";
 import { CodeSaleService } from "./service";
 import { CodeSale } from "src/entities/types/codeSale.entity";
@@ -14,10 +15,12 @@ import { CreateCodeSaleDto, GetAll, UpdateCodeSaleDto } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ByID } from "src/interface/dto";
+import { JwtAdminAuthGuard } from "src/auth/guard/jwt-admin-auth.guard";
 
 @Controller("sale-code")
 @ApiBearerAuth()
 @ApiTags("Code Sale")
+@UseGuards(JwtAdminAuthGuard)
 export class CodeSaleController {
   constructor(private readonly companyService: CodeSaleService) {}
   @Post()

@@ -7,6 +7,7 @@ import {
   Post,
   Query,
   Put,
+  UseGuards,
 } from "@nestjs/common";
 import { GroupProductService } from "./service";
 import { GroupProduct } from "src/entities/types/group.entity";
@@ -15,13 +16,13 @@ import {
   GetAll,
   UpdateGroupProductDto,
 } from "./dto/dto";
-
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ByID, PaginationRes } from "src/interface/dto";
-
+import { JwtAdminAuthGuard } from "src/auth/guard/jwt-admin-auth.guard";
 @Controller("group-product")
 @ApiBearerAuth()
 @ApiTags("Group Products")
+@UseGuards(JwtAdminAuthGuard)
 export class GroupProductController {
   constructor(private readonly companyService: GroupProductService) {}
   @Post()

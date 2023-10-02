@@ -7,6 +7,7 @@ import {
   Post,
   Query,
   Put,
+  UseGuards,
 } from "@nestjs/common";
 import { ProductSizeService } from "./service";
 import { ProductSize } from "src/entities/types/size.entity";
@@ -14,10 +15,12 @@ import { CreateProductSizeDto, GetAll, UpdateProductSizeDto } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
+import { JwtAdminAuthGuard } from "src/auth/guard/jwt-admin-auth.guard";
 
 @Controller("size-product")
 @ApiBearerAuth()
 @ApiTags("Size Product")
+@UseGuards(JwtAdminAuthGuard)
 export class ProductSizeController {
   constructor(private readonly SizeService: ProductSizeService) {}
   @Post()

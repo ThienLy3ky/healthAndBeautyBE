@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { CompanyService } from "./service";
 import { Company } from "src/entities/types/companies.entity";
@@ -14,10 +15,12 @@ import { CreateCompanyDto, GetAll, UpdateCompanyDto } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ByID, PaginationRes } from "src/interface/dto";
+import { JwtAdminAuthGuard } from "src/auth/guard/jwt-admin-auth.guard";
 
 @Controller("company")
 @ApiBearerAuth()
 @ApiTags("Company")
+@UseGuards(JwtAdminAuthGuard)
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
   @Post()

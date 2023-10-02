@@ -6,17 +6,22 @@ import {
   Param,
   Query,
   Put,
+  UseGuards,
+  Patch,
 } from "@nestjs/common";
 import { BillService } from "./service";
 import { Bill } from "src/entities/types/bill.entity";
-import { GetAll, UpdateBillDto } from "./dto/dto";
+import { CodeParame, GetAll, UpdateBillDto } from "./dto/dto";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ByID, PaginationRes } from "src/interface/dto";
+import { StatusBill } from "src/entities/enum/status.enum";
+import { JwtAdminAuthGuard } from "src/auth/guard/jwt-admin-auth.guard";
 
 @Controller("bills")
 @ApiBearerAuth()
 @ApiTags("Bill")
+@UseGuards(JwtAdminAuthGuard)
 export class BillController {
   constructor(private readonly companyService: BillService) {}
 
@@ -30,6 +35,20 @@ export class BillController {
     return this.companyService.findOne({ id });
   }
 
+  @Patch("status/:id")
+  async updateStatus(
+    @Param() { id }: CodeParame,
+    @Body() { status }: { status: StatusBill },
+  ) {
+    return this.companyService.updateStatus({ id }, status);
+  }
+  @Patch("payment/:id")
+  async updatePayment(
+    @Param() { id }: CodeParame,
+    @Body() { status }: { status: boolean },
+  ) {
+    return this.companyService.updatePayment({ id }, status);
+  }
   @Put(":id")
   async update(@Param("id") { id }: ByID, @Body() updateBill: UpdateBillDto) {
     return this.companyService.update({ id }, updateBill);

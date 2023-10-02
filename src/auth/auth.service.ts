@@ -140,6 +140,9 @@ export class AuthService {
   async getProfile(data: any) {
     return await this.usersService.getProfile(data.user);
   }
+  async getProfileAdmin(data: any) {
+    return await this.AdminService.findByEmail(data.user);
+  }
   async refreshtoken(
     { user, role }: { user: string; role: string },
     refreshToken: string,
@@ -150,7 +153,8 @@ export class AuthService {
     } else {
       account = await this.usersService.findByEmail(user);
     }
-    if (account.isActive !== true) return "Not Acitve";
+    if (account.isActive !== true && role !== "admin") return "Not Acitve";
+
     const check = compareSync(refreshToken, account.refreshToken);
     if (check) {
       const payload = {

@@ -9,6 +9,7 @@ import {
   Put,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from "@nestjs/common";
 import { ProductTypeService } from "./service";
 import { ProductType } from "src/entities/types/type.entity";
@@ -18,10 +19,12 @@ import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { uploadFile } from "src/firebase";
 import { imageOptions } from "src/utils";
+import { JwtAdminAuthGuard } from "src/auth/guard/jwt-admin-auth.guard";
 
 @Controller("type-product")
 @ApiBearerAuth()
 @ApiTags("Type Product")
+@UseGuards(JwtAdminAuthGuard)
 export class ProductTypeController {
   constructor(private readonly TypeService: ProductTypeService) {}
 

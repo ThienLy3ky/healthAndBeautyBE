@@ -9,6 +9,7 @@ import {
   Put,
   UseInterceptors,
   UploadedFiles,
+  UseGuards,
 } from "@nestjs/common";
 import { DrugProductService } from "./service";
 import { DrugProduct } from "src/entities/types/product.entity";
@@ -18,10 +19,12 @@ import { FilesInterceptor } from "@nestjs/platform-express";
 import { imageOptions } from "src/utils";
 import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
 import { deleteFile } from "src/firebase";
+import { JwtAdminAuthGuard } from "src/auth/guard/jwt-admin-auth.guard";
 
 @Controller("product")
 @ApiBearerAuth()
 @ApiTags("product")
+@UseGuards(JwtAdminAuthGuard)
 export class DrugProductController {
   constructor(private readonly productService: DrugProductService) {}
 

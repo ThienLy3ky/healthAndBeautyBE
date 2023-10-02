@@ -9,6 +9,7 @@ import {
   Put,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from "@nestjs/common";
 import { CategoryService } from "./service";
 import { Category } from "src/entities/types/categories.entity";
@@ -18,10 +19,12 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { uploadFile } from "src/firebase";
 import { imageOptions } from "src/utils";
 import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
+import { JwtAdminAuthGuard } from "src/auth/guard/jwt-admin-auth.guard";
 
 @Controller("categories")
 @ApiBearerAuth()
 @ApiTags("categories")
+@UseGuards(JwtAdminAuthGuard)
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 

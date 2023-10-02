@@ -2,9 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Bill } from "src/entities/types/bill.entity";
-import { GetAll } from "./dto/dto";
+import { CodeParame, GetAll } from "./dto/dto";
 import { ByID, PaginationRes } from "src/interface/dto";
 import { populatedAll, populatedAllPagination } from "src/utils";
+import { StatusBill } from "src/entities/enum/status.enum";
 
 @Injectable()
 export class BillService {
@@ -78,6 +79,24 @@ export class BillService {
     return this.productTypeModel.findByIdAndUpdate(id, updateBillDto, {
       new: true,
     });
+  }
+  async updateStatus({ id }: CodeParame, status: StatusBill): Promise<Bill> {
+    return this.productTypeModel.findOneAndUpdate(
+      { code: id },
+      { status },
+      {
+        new: true,
+      },
+    );
+  }
+  async updatePayment({ id }: CodeParame, status: boolean): Promise<Bill> {
+    return this.productTypeModel.findOneAndUpdate(
+      { code: id },
+      { wasPayment: status },
+      {
+        new: true,
+      },
+    );
   }
 
   async remove({ id }: ByID): Promise<Bill> {

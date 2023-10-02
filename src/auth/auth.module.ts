@@ -9,6 +9,7 @@ import { AdminsModule } from "src/routers/admins/admins.module";
 import { JwtStrategy } from "./strategy/jwt.strategy";
 import { RefreshTokenStrategy } from "./strategy/refresh-jwt.strategy";
 import { MailingService } from "src/mailing/mailing.service";
+import { JwtAdminStrategy } from "./strategy/jwt-admin.strategy";
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MailingService } from "src/mailing/mailing.service";
     MailingService,
     LocalStrategy,
     JwtStrategy,
+    JwtAdminStrategy,
     RefreshTokenStrategy,
   ],
   controllers: [AuthController],

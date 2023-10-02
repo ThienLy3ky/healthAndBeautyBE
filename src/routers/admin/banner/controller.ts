@@ -9,6 +9,7 @@ import {
   Put,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from "@nestjs/common";
 import { BannerService } from "./service";
 import { Banner } from "src/entities/types/banner.entity";
@@ -19,10 +20,12 @@ import { ByID } from "src/interface/dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { imageOptions } from "src/utils";
 import { uploadFile } from "src/firebase";
+import { JwtAdminAuthGuard } from "src/auth/guard/jwt-admin-auth.guard";
 
 @Controller("banner")
 @ApiBearerAuth()
 @ApiTags("Banner")
+@UseGuards(JwtAdminAuthGuard)
 export class BannerController {
   constructor(private readonly companyService: BannerService) {}
   @Post()

@@ -30,6 +30,11 @@ export class CreateBillDto {
   @IsNotEmpty()
   code: string;
 }
+export class CodeParame {
+  @ApiProperty()
+  @IsNotEmpty()
+  id: string;
+}
 
 export class UpdateBillDto {
   @ApiProperty({ required: true })

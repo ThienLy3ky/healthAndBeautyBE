@@ -7,6 +7,7 @@ import {
   Post,
   Query,
   Put,
+  UseGuards,
 } from "@nestjs/common";
 import { StyleProductService } from "./service";
 import { StyleProduct } from "src/entities/types/style.entity";
@@ -18,10 +19,12 @@ import {
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ByID, CodeParam, PaginationRes } from "src/interface/dto";
+import { JwtAdminAuthGuard } from "src/auth/guard/jwt-admin-auth.guard";
 
 @Controller("style-product")
 @ApiBearerAuth()
 @ApiTags("styles")
+@UseGuards(JwtAdminAuthGuard)
 export class StyleProductController {
   constructor(private readonly StyleService: StyleProductService) {}
   @Post()
